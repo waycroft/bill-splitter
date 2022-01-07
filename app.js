@@ -24,15 +24,13 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
-const uri = `mongodb+srv://primary:${process.env.MONGO_CLOUD_PASSWORD}@cluster0.5flqb.mongodb.net/bill-splitter?retryWrites=true&w=majority`;
-mongoose.connect(uri)
-    .then(() => {
-    mongoose.connection.on('connected', () => {
-        console.log('connected to mongodb');
-    });
-    mongoose.connection.on('error', (err) => {
-        console.log('error connecting to mongodb ', err);
-    });
+const uri = `mongodb+srv://primary:${process.env.MONGO_CLOUD_PASSWORD}@cluster0.5flqb.mongodb.net/main?retryWrites=true&w=majority`;
+mongoose.connect(uri);
+mongoose.connection.on('connected', () => {
+    console.log('connected to mongodb');
+});
+mongoose.connection.on('error', (err) => {
+    console.log('error connecting to mongodb ', err);
 });
 module.exports = app;
 //# sourceMappingURL=app.js.map

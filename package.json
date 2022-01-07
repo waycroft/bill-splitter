@@ -1,0 +1,17 @@
+{
+  "name": "bill-splitter",
+  "version": "1.0.0",
+  "description": "A simple bill-splitting app.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "bill",
+    "transaction",
+    "accounting",
+    "budget"
+  ],
+  "author": "TNT",
+  "license": "ISC"
+}

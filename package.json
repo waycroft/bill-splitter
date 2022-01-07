@@ -3,12 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "nodemon ./bin/www"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
-    "dot-env": "^0.0.1",
+    "dotenv": "^10.0.0",
     "express": "~4.16.1",
     "hbs": "~4.0.4",
     "http-errors": "~1.6.3",
@@ -16,6 +16,7 @@
     "morgan": "~1.9.1"
   },
   "devDependencies": {
-    "@types/node": "^17.0.8"
+    "@types/node": "^17.0.8",
+    "nodemon": "^2.0.15"
   }
 }

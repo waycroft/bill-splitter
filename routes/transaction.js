@@ -22,6 +22,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
 let router = express.Router();
 router.post('/', function (req, res, next) {
+    res.send('POST /transaction');
 });
 module.exports = router;
 //# sourceMappingURL=transaction.js.map

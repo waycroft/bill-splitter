@@ -1,13 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TransactionSchema = void 0;
+exports.Transaction = void 0;
 const mongoose = require('mongoose');
 const mongoose_1 = require("mongoose");
-exports.TransactionSchema = new mongoose_1.Schema({
-    payer: mongoose.ObjectId,
+const TransactionSchema = new mongoose_1.Schema({
+    payer: String,
     amount: Number,
     date: Date,
     memo: String,
-    payees: [mongoose.ObjectId]
+    payees: [String]
 });
+exports.Transaction = (0, mongoose_1.model)('Transaction', TransactionSchema, 'transactions');
 //# sourceMappingURL=Transaction.js.map

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-import { Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-export interface Transaction {
+interface Transaction {
     payer: string;
     amount: number;
     date: Date;
@@ -9,10 +9,12 @@ export interface Transaction {
     payees: string[];
 }
 
-export const TransactionSchema = new Schema<Transaction>({
-    payer: mongoose.ObjectId,
+const TransactionSchema = new Schema<Transaction>({
+    payer: String, //make objID
     amount: Number,
     date: Date,
     memo: String,
-    payees: [mongoose.ObjectId]
+    payees: [String] // array of ObjIds
 })
+
+export const Transaction = model<Transaction>('Transaction', TransactionSchema, 'transactions');

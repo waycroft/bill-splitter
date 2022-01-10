@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Transaction = void 0;
-const mongoose = require('mongoose');
 const mongoose_1 = require("mongoose");
 const TransactionSchema = new mongoose_1.Schema({
     payer: String,

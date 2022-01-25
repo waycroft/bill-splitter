@@ -1,8 +1,7 @@
 {
-  "export": "bill-splitter",
+  "name": "bill-splitter",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "start": "nodemon ./bin/www"
   },
@@ -17,8 +16,6 @@
     "morgan": "~1.9.1"
   },
   "devDependencies": {
-    "@types/cookie-parser": "^1.4.2",
-    "@types/morgan": "^1.9.3",
     "@types/node": "^16.0.0",
     "nodemon": "^2.0.15"
   }

@@ -30,7 +30,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
 let router = express.Router();
-const Transaction_1 = require("../src/models/Transaction");
+const Transaction_1 = require("../models/Transaction");
 router.get('/', function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         let transactions = yield Transaction_1.TransactionModel.find();
@@ -52,4 +52,4 @@ router.post('/', function (req, res, next) {
     });
 });
 module.exports = router;
-//# sourceMappingURL=transaction.js.map
+//# sourceMappingURL=transaction_route.js.map

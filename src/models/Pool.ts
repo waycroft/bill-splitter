@@ -1,5 +1,5 @@
 import { Schema, model, ObjectId } from 'mongoose';
-import { Transaction, TransactionModel } from './Transaction';
+import { Transaction, TransactionSchema } from './Transaction';
 
 export interface Pool {
     settledTotal: number,
@@ -12,8 +12,8 @@ export interface Pool {
 const PoolSchema = new Schema<Pool>({
     settledTotal: Number,
     unsettledTotal: Number,
-    members: [mongoose.ObjectId],
-    transactions: [TransactionModel],
+    members: [Schema.Types.ObjectId],
+    transactions: [TransactionSchema],
     createdAt: Date
 })
 

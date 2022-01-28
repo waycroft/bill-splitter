@@ -30,11 +30,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
 let router = express.Router();
-const Pool_js_1 = require("../models/Pool.js");
+const pool_js_1 = require("../controllers/pool.js");
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const pools = yield Pool_js_1.PoolModel.find().lean();
-        res.send(pools);
+        res.send(yield (0, pool_js_1.getAllPools)());
     }
     catch (error) {
         console.error(error);

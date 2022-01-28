@@ -16,9 +16,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 const indexRouter = require('./src/routes/index_route');
 const transactionRouter = require('./src/routes/transaction_route');
 const poolRouter = require('./src/routes/pool_route');
+const userRouter = require('./src/routes/user_route');
 app.use('/', indexRouter);
 app.use('/transaction', transactionRouter);
 app.use('/pool', poolRouter);
+app.use('/user', userRouter);
 app.use(function (req, res, next) {
     next(createError(404));
 });

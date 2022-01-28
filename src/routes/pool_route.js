@@ -34,6 +34,7 @@ const Pool_js_1 = require("../models/Pool.js");
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const pools = yield Pool_js_1.PoolModel.find().lean();
+        res.send(pools);
     }
     catch (error) {
         console.error(error);

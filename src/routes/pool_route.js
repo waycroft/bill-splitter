@@ -40,5 +40,14 @@ router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(500).json({ error: String(error) });
     }
 }));
+router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        res.send(yield (0, pool_js_1.createPool)(req.body.members));
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ error: String(error) });
+    }
+}));
 module.exports = router;
 //# sourceMappingURL=pool_route.js.map

@@ -10,11 +10,20 @@ export interface Pool {
 }
 
 const PoolSchema = new Schema<Pool>({
-    settledTotal: Number,
-    unsettledTotal: Number,
+    settledTotal: {
+        type: Number,
+        default: 0
+    },
+    unsettledTotal: {
+        type: Number,
+        default: 0
+    },
     members: [Schema.Types.ObjectId],
     transactions: [TransactionSchema],
-    createdAt: Date
+    createdAt: {
+        type: Date,
+        default: new Date()
+    }
 })
 
 export const PoolModel = model<Pool>('Pool', PoolSchema, 'pools');

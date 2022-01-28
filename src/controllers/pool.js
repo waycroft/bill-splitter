@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllPools = void 0;
+exports.createPool = exports.getAllPools = void 0;
 const Pool_js_1 = require("../models/Pool.js");
 function getAllPools() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -18,4 +18,14 @@ function getAllPools() {
     });
 }
 exports.getAllPools = getAllPools;
+function createPool(members) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let pool = new Pool_js_1.PoolModel({
+            members: members
+        });
+        yield pool.save();
+        return pool;
+    });
+}
+exports.createPool = createPool;
 //# sourceMappingURL=pool.js.map

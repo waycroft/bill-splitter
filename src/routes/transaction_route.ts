@@ -1,27 +1,15 @@
 import * as express from 'express';
+import { createTransaction } from '../controllers/transaction';
 let router = express.Router();
 import { Transaction, TransactionModel } from '../models/Transaction';
 
-/* GET home page. */
-router.get('/', async function(req, res, next) {
-  let transactions = await TransactionModel.find();
-
-  res.send(transactions);
-});
-
-router.post('/', async function(req, res, next) {
-  let $ = req.body;
-
-  let transaction = new TransactionModel({
-    payer: $.payer,
-    payees: $.payees,
-    date: $.date ? $.date : new Date(),
-    memo: $.memo,
-    amount: $.amount
-  })
-  await transaction.save();
-
-  res.send(transaction);
-});
+router.post('/', async (req, res) => {
+  try {
+    res.send(await createTransaction(req.body.pool_id, req.body.transaction_data));
+} catch (error) {
+    console.error(error);
+    res.status(500).json({error: String(error)});
+}
+})
 
 module.exports = router;

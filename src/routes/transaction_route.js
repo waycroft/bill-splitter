@@ -29,27 +29,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
+const transaction_1 = require("../controllers/transaction");
 let router = express.Router();
-const Transaction_1 = require("../models/Transaction");
-router.get('/', function (req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let transactions = yield Transaction_1.TransactionModel.find();
-        res.send(transactions);
-    });
-});
-router.post('/', function (req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let $ = req.body;
-        let transaction = new Transaction_1.TransactionModel({
-            payer: $.payer,
-            payees: $.payees,
-            date: $.date ? $.date : new Date(),
-            memo: $.memo,
-            amount: $.amount
-        });
-        yield transaction.save();
-        res.send(transaction);
-    });
-});
+router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        res.send(yield (0, transaction_1.createTransaction)(req.body.pool_id, req.body.transaction_data));
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ error: String(error) });
+    }
+}));
 module.exports = router;
 //# sourceMappingURL=transaction_route.js.map

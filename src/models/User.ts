@@ -20,8 +20,8 @@ const UserSchema = new Schema<User>({
     password: String,
     createdAt: Date,
     lastLoginAt: Date,
-    pools: [mongoose.ObjectId],
-    transactions: [mongoose.ObjectId],
+    pools: [Schema.Types.ObjectId],
+    transactions: [Schema.Types.ObjectId],
     totalOwed: Number,
     totalOwes: Number,
 })

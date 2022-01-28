@@ -9,13 +9,13 @@ export interface Transaction {
     payees: Array<ObjectId>;
 }
 
-const TransactionSchema = new Schema<Transaction>({
+export const TransactionSchema = new Schema<Transaction>({
     date: Date,
-    owner: mongoose.ObjectId,
+    owner: Schema.Types.ObjectId,
     amount: Number,
     category: String,
     memo: String,
-    payees: [mongoose.ObjectId]
+    payees: [Schema.Types.ObjectId]
 })
 
 export const TransactionModel = model<Transaction>('Transaction', TransactionSchema, 'transactions');

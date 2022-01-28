@@ -9,8 +9,8 @@ const UserSchema = new mongoose_1.Schema({
     password: String,
     createdAt: Date,
     lastLoginAt: Date,
-    pools: [mongoose.Schema.Types.ObjectId],
-    transactions: [mongoose.Schema.Types.ObjectId],
+    pools: [mongoose.ObjectId],
+    transactions: [mongoose.ObjectId],
     totalOwed: Number,
     totalOwes: Number,
 });

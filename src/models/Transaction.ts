@@ -1,19 +1,21 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, ObjectId } from 'mongoose';
 
 export interface Transaction {
-    payer: string;
-    amount: number;
     date: Date;
+    owner: ObjectId;
+    amount: number;
+    category: string,
     memo: string;
-    payees: string[];
+    payees: Array<ObjectId>;
 }
 
 const TransactionSchema = new Schema<Transaction>({
-    payer: String, //make objID
-    amount: Number,
     date: Date,
+    owner: mongoose.ObjectId,
+    amount: Number,
+    category: String,
     memo: String,
-    payees: [String] // array of ObjIds
+    payees: [mongoose.ObjectId]
 })
 
 export const TransactionModel = model<Transaction>('Transaction', TransactionSchema, 'transactions');

@@ -12,9 +12,9 @@ interface Pool {
 const PoolSchema = new Schema<Pool>({
     settledTotal: Number,
     unsettledTotal: Number,
-    members: [mongoose.Schema.Types.ObjectId],
+    members: [mongoose.ObjectId],
     transactions: [TransactionModel],
     createdAt: Date
 })
 
-export const Pool = model<Pool>('Pool', PoolSchema, 'pools');
+export const PoolModel = model<Pool>('Pool', PoolSchema, 'pools');

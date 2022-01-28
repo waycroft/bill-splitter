@@ -1,7 +1,7 @@
 import { Schema, model, ObjectId } from 'mongoose';
 import { Transaction, TransactionModel } from './Transaction';
 
-interface Pool {
+export interface Pool {
     settledTotal: number,
     unsettledTotal: number,
     members: Array<ObjectId>,

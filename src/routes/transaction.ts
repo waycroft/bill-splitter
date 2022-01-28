@@ -1,6 +1,6 @@
 import * as express from 'express';
 let router = express.Router();
-import { Transaction, TransactionModel } from '../src/models/Transaction';
+import { Transaction, TransactionModel } from '../models/Transaction';
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {

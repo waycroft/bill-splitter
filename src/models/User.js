@@ -7,8 +7,14 @@ const UserSchema = new mongoose_1.Schema({
     lastName: String,
     email: String,
     password: String,
-    createdAt: Date,
-    lastLoginAt: Date,
+    createdAt: {
+        type: Date,
+        default: new Date()
+    },
+    lastLoginAt: {
+        type: Date,
+        default: new Date()
+    },
     pools: [mongoose_1.Schema.Types.ObjectId],
     transactions: [mongoose_1.Schema.Types.ObjectId],
     totalOwed: Number,

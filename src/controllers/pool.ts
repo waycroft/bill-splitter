@@ -1,4 +1,5 @@
-import { PoolModel } from '../models/Pool.js';
+import { Document } from 'mongoose';
+import { Pool, PoolModel } from '../models/Pool.js';
 import { User } from '../models/User.js';
 
 export async function getAllPools() {
@@ -7,7 +8,7 @@ export async function getAllPools() {
 }
 
 export async function createPool(members: Array<User>) {
-    let pool = new PoolModel({
+    let pool: Document<Pool> = new PoolModel({
         members: members
     });
     await pool.save();

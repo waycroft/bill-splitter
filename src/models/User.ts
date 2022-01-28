@@ -18,8 +18,14 @@ const UserSchema = new Schema<User>({
     lastName: String,
     email: String,
     password: String,
-    createdAt: Date,
-    lastLoginAt: Date,
+    createdAt: {
+        type: Date,
+        default: new Date()
+    },
+    lastLoginAt: {
+        type: Date,
+        default: new Date()
+    },
     pools: [Schema.Types.ObjectId],
     transactions: [Schema.Types.ObjectId],
     totalOwed: Number,

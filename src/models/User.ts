@@ -1,7 +1,6 @@
 import { Schema, ObjectId, model } from 'mongoose';
-import { Transaction } from './Transaction.js';
 
-interface User {
+export interface User {
     firstName: string,
     lastName: string,
     email: string,
@@ -27,4 +26,4 @@ const UserSchema = new Schema<User>({
     totalOwes: Number,
 })
 
-export const User = model<User>('User', UserSchema, 'users');
+export const UserModel = model<User>('User', UserSchema, 'users');

@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-interface Transaction {
+export interface Transaction {
     payer: string;
     amount: number;
     date: Date;
@@ -16,4 +16,4 @@ const TransactionSchema = new Schema<Transaction>({
     payees: [String] // array of ObjIds
 })
 
-export const Transaction = model<Transaction>('Transaction', TransactionSchema, 'transactions');
+export const TransactionModel = model<Transaction>('Transaction', TransactionSchema, 'transactions');

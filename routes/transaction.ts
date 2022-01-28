@@ -1,10 +1,10 @@
 import * as express from 'express';
 let router = express.Router();
-import { Transaction } from '../src/models/Transaction';
+import { Transaction, TransactionModel } from '../src/models/Transaction';
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
-  let transactions = await Transaction.find();
+  let transactions = await TransactionModel.find();
 
   res.send(transactions);
 });
@@ -12,7 +12,7 @@ router.get('/', async function(req, res, next) {
 router.post('/', async function(req, res, next) {
   let $ = req.body;
 
-  let transaction = new Transaction({
+  let transaction = new TransactionModel({
     payer: $.payer,
     payees: $.payees,
     date: $.date ? $.date : new Date(),

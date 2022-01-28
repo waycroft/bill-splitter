@@ -33,14 +33,14 @@ let router = express.Router();
 const Transaction_1 = require("../src/models/Transaction");
 router.get('/', function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        let transactions = yield Transaction_1.Transaction.find();
+        let transactions = yield Transaction_1.TransactionModel.find();
         res.send(transactions);
     });
 });
 router.post('/', function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         let $ = req.body;
-        let transaction = new Transaction_1.Transaction({
+        let transaction = new Transaction_1.TransactionModel({
             payer: $.payer,
             payees: $.payees,
             date: $.date ? $.date : new Date(),

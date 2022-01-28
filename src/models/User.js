@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.UserModel = void 0;
 const mongoose_1 = require("mongoose");
 const UserSchema = new mongoose_1.Schema({
     firstName: String,
@@ -14,5 +14,5 @@ const UserSchema = new mongoose_1.Schema({
     totalOwed: Number,
     totalOwes: Number,
 });
-exports.User = (0, mongoose_1.model)('User', UserSchema, 'users');
+exports.UserModel = (0, mongoose_1.model)('User', UserSchema, 'users');
 //# sourceMappingURL=User.js.map

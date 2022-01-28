@@ -19,16 +19,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // route handlers
-const indexRouter = require('./routes/index');
-const transactionRouter = require('./routes/transaction');
-const poolRouter = require('./routes/pool');
-const userRouter = require('./routes/user');
+const indexRouter = require('./src/routes/index_route');
+const transactionRouter = require('./src/routes/transaction_route');
+const poolRouter = require('./src/routes/pool_route');
 
 // routes
 app.use('/', indexRouter);
 app.use('/transaction', transactionRouter);
 app.use('/pool', poolRouter);
-app.use('/user', userRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -13,14 +13,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-const indexRouter = require('./routes/index');
-const transactionRouter = require('./routes/transaction');
-const poolRouter = require('./routes/pool');
-const userRouter = require('./routes/user');
+const indexRouter = require('./src/routes/index_route');
+const transactionRouter = require('./src/routes/transaction_route');
+const poolRouter = require('./src/routes/pool_route');
 app.use('/', indexRouter);
 app.use('/transaction', transactionRouter);
 app.use('/pool', poolRouter);
-app.use('/user', userRouter);
 app.use(function (req, res, next) {
     next(createError(404));
 });

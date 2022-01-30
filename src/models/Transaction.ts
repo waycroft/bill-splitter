@@ -2,11 +2,11 @@ import { Schema, model, ObjectId } from 'mongoose';
 
 export interface Transaction {
     date: Date;
-    owner: ObjectId;
+    owner: string;
     amount: number;
     category: string,
     memo: string;
-    payees: Array<ObjectId>;
+    payees: Array<string>;
 }
 
 export const TransactionSchema = new Schema<Transaction>({

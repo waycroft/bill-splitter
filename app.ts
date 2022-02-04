@@ -5,6 +5,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
+const mongoDebug = require('debug')('mongoDB');
 
 var app = express();
 
@@ -49,11 +50,11 @@ app.use(function(err, req, res, next) {
 const uri = `mongodb+srv://primary:${process.env.MONGO_CLOUD_PASSWORD}@cluster0.5flqb.mongodb.net/main?retryWrites=true&w=majority`;
 mongoose.connect(uri);
 mongoose.connection.on('connected',()=>{
-  console.log('connected to mongodb');
+  mongoDebug('connected to mongodb');
 });
 
 mongoose.connection.on('error',(err)=>{
-  console.log('error connecting to mongodb ', err);
+  mongoDebug('error connecting to mongodb ', err);
 });
 
 module.exports = app;

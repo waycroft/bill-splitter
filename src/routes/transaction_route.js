@@ -33,7 +33,7 @@ const transaction_1 = require("../controllers/transaction");
 let router = express.Router();
 router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        res.send(yield (0, transaction_1.createTransaction)(req.body.pool_id, req.body.transaction_data));
+        res.send(yield (0, transaction_1.upsertTransaction)(req.body));
     }
     catch (error) {
         console.error(error);

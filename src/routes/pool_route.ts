@@ -1,6 +1,6 @@
 import * as express from 'express';
 let router = express.Router();
-import { createPool, getAllPools, getPoolMemberObjIds } from '../controllers/pool.js';
+import { upsertPool, getAllPools, getPoolMemberObjIds } from '../controllers/pool.js';
 
 router.get('/', async (req: any, res: any) => {
     try {
@@ -18,7 +18,7 @@ router.post('/', async (req: any, res: any, next: any) => {
 
 router.post('/', async (req: any, res: any) => {
     try {
-        res.send(await createPool(req.body.members));
+        res.send(await upsertPool(req.body));
     } catch (error) {
         console.error(error);
         res.status(500).json({error: String(error)});

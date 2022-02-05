@@ -46,7 +46,7 @@ router.post('/', (req, res, next) => __awaiter(void 0, void 0, void 0, function*
 }));
 router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        res.send(yield (0, pool_js_1.createPool)(req.body.members));
+        res.send(yield (0, pool_js_1.upsertPool)(req.body));
     }
     catch (error) {
         console.error(error);

@@ -9,13 +9,20 @@ export async function getAllPools() {
     return pools;
 }
 
-export async function createPool(members: Array<string>) {
-    let pool: Document<Pool> = new PoolModel({
+export async function upsertPool(poolData: Pool) {
+    const existingPool = await PoolModel.findOne({ members: { $all: poolData.members }}).lean();
+    const poolAlreadyExists = !!existingPool;
+
+    if (poolAlreadyExists) {
+        debug('pool exists')
+        return existingPool;
+    }
+    
+    const pool: Document<Pool> = new PoolModel({
         id: uuidv4(),
-        members: members
+        members: poolData.members
     });
     await pool.save();
-    
     return pool;
 }
 

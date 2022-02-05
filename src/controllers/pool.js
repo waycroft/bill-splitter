@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPoolMemberObjIds = exports.createPool = exports.getAllPools = void 0;
+exports.getPoolMemberObjIds = exports.upsertPool = exports.getAllPools = void 0;
 const Pool_js_1 = require("../models/Pool.js");
 const exchange_id_js_1 = require("../helpers/exchange_id.js");
 const uuid_1 = require("uuid");
@@ -21,17 +21,23 @@ function getAllPools() {
     });
 }
 exports.getAllPools = getAllPools;
-function createPool(members) {
+function upsertPool(poolData) {
     return __awaiter(this, void 0, void 0, function* () {
-        let pool = new Pool_js_1.PoolModel({
+        const existingPool = yield Pool_js_1.PoolModel.findOne({ members: { $all: poolData.members } }).lean();
+        const poolAlreadyExists = !!existingPool;
+        if (poolAlreadyExists) {
+            debug('pool exists');
+            return existingPool;
+        }
+        const pool = new Pool_js_1.PoolModel({
             id: (0, uuid_1.v4)(),
-            members: members
+            members: poolData.members
         });
         yield pool.save();
         return pool;
     });
 }
-exports.createPool = createPool;
+exports.upsertPool = upsertPool;
 function getPoolMemberObjIds(members) {
     return __awaiter(this, void 0, void 0, function* () {
         for (let i = 0; i < members.length; i++) {

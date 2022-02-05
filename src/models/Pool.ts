@@ -1,10 +1,12 @@
-import { Schema, model, ObjectId } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { Transaction, TransactionSchema } from './Transaction';
 
 export interface Pool {
+    _id: string;
+    id: string;
     settledTotal: number,
     unsettledTotal: number,
-    members: Array<ObjectId>,
+    members: Array<string>,
     transactions: Array<Transaction>,
     createdAt: Date
 }

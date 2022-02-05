@@ -1,6 +1,8 @@
 import { Schema, model, ObjectId } from 'mongoose';
 
 export interface Transaction {
+    _id: string;
+    id: string;
     date: Date;
     owner: string;
     amount: number;

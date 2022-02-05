@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
 import { Transaction, TransactionSchema } from './Transaction';
 
 export interface Pool {
@@ -14,7 +15,8 @@ export interface Pool {
 const PoolSchema = new Schema<Pool>({
     id: {
         type: String,
-        required: true
+        required: true,
+        default: uuidv4()
     },
     settledTotal: {
         type: Number,

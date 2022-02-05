@@ -1,4 +1,5 @@
-import { Schema, model, ObjectId } from 'mongoose';
+import { Schema, model } from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface Transaction {
     _id: string;
@@ -14,7 +15,8 @@ export interface Transaction {
 export const TransactionSchema = new Schema<Transaction>({
     id: {
         type: String,
-        required: true
+        required: true,
+        default: uuidv4()
     },
     date: Date,
     owner: Schema.Types.ObjectId,

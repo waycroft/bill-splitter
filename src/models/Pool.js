@@ -2,11 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolModel = void 0;
 const mongoose_1 = require("mongoose");
+const uuid_1 = require("uuid");
 const Transaction_1 = require("./Transaction");
 const PoolSchema = new mongoose_1.Schema({
     id: {
         type: String,
-        required: true
+        required: true,
+        default: (0, uuid_1.v4)()
     },
     settledTotal: {
         type: Number,

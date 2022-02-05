@@ -2,10 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TransactionModel = exports.TransactionSchema = void 0;
 const mongoose_1 = require("mongoose");
+const uuid_1 = require("uuid");
 exports.TransactionSchema = new mongoose_1.Schema({
     id: {
         type: String,
-        required: true
+        required: true,
+        default: (0, uuid_1.v4)()
     },
     date: Date,
     owner: mongoose_1.Schema.Types.ObjectId,

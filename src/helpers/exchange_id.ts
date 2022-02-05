@@ -1,7 +1,9 @@
-import { Document, isValidObjectId, Schema } from "mongoose";
-import { PoolModel } from "../models/Pool";
-import { TransactionModel } from "../models/Transaction";
-import { UserModel } from "../models/User";
+import { Document, isValidObjectId, Schema, Model } from "mongoose";
+import validate from "uuid-validate";
+import { Pool, PoolModel } from "../models/Pool";
+import { Transaction, TransactionModel } from "../models/Transaction";
+import { User, UserModel } from "../models/User";
+const debug = require('debug')('exchange_id')
 
 const allModels = {
     "pools": PoolModel,
@@ -11,16 +13,18 @@ const allModels = {
  
 const error = 'Could not locate document. Double check that the id passed is valid'
 
-export const getObjId = async function(collectionName: string, id: string): Promise<string> {
-    const model = allModels[collectionName];
+export const getObjId = async function(collectionName: string, uuid: string): Promise<string> {
+    if (!validate(uuid)) throw 'invalid UUID';
 
-    let doc: Document
-    doc = await model.findOne({ id: id }).lean();
+    const model: Model<Pool | Transaction | User> = allModels[collectionName];
 
-    if (!doc) {
-        throw error;
+    let doc: Pool | Transaction | User | null;
+    doc = await model.findOne({ id: uuid }).lean();
+
+    if (doc !== null) {
+        return doc._id;
     }
-    return doc._id;
+    throw error;
 }
 
 export const getUUID = async function(collectionName: string, id: Schema.Types.ObjectId): Promise<string> {

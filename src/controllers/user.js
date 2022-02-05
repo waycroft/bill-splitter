@@ -9,7 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUser = exports.getAllUsers = void 0;
+exports.upsertUser = exports.getAllUsers = void 0;
+const upsert_js_1 = require("../helpers/upsert.js");
 const User_js_1 = require("../models/User.js");
 function getAllUsers() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -18,12 +19,10 @@ function getAllUsers() {
     });
 }
 exports.getAllUsers = getAllUsers;
-function createUser(userData) {
+function upsertUser(userData) {
     return __awaiter(this, void 0, void 0, function* () {
-        let user = new User_js_1.UserModel(Object.assign({}, userData));
-        yield user.save();
-        return user;
+        return yield (0, upsert_js_1.upsertDocument)('users', 'email', userData);
     });
 }
-exports.createUser = createUser;
+exports.upsertUser = upsertUser;
 //# sourceMappingURL=user.js.map

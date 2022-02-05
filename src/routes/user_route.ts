@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { getAllUsers, createUser } from '../controllers/user';
+import { getAllUsers, upsertUser } from '../controllers/user';
 let router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        res.send(await createUser(req.body));
+        res.send(await upsertUser(req.body));
     } catch (error) {
         console.error(error);
         res.status(500).json({error: String(error)});

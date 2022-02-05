@@ -42,7 +42,7 @@ router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 }));
 router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        res.send(yield (0, user_1.createUser)(req.body));
+        res.send(yield (0, user_1.upsertUser)(req.body));
     }
     catch (error) {
         console.error(error);

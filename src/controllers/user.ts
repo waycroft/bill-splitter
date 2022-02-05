@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { upsertDocument } from '../helpers/upsert.js';
 import { User, UserModel } from '../models/User.js';
 
 export async function getAllUsers() {
@@ -6,11 +6,6 @@ export async function getAllUsers() {
     return users;
 }
 
-export async function createUser(userData: User) {
-    let user: Document<User> = new UserModel({
-        ...userData
-    });
-    await user.save();
-    
-    return user;
+export async function upsertUser(userData: User) {
+    return await upsertDocument('users', 'email', userData);
 }

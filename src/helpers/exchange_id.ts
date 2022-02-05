@@ -27,7 +27,8 @@ export const getObjId = async function(collectionName: string, uuid: string): Pr
     throw error;
 }
 
-export const getUUID = async function(collectionName: string, id: Schema.Types.ObjectId): Promise<string> {
+export const getUUID = async function(collectionName: string, id: Schema.Types.ObjectId): 
+    Promise<string> {
     const model = allModels[collectionName];
 
     let doc: Document

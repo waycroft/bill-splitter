@@ -16,6 +16,10 @@ export interface User {
 }
 
 const UserSchema = new Schema<User>({
+    id: {
+        type: String,
+        required: true
+    },
     firstName: String,
     lastName: String,
     email: String,

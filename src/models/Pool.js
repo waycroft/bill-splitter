@@ -4,6 +4,10 @@ exports.PoolModel = void 0;
 const mongoose_1 = require("mongoose");
 const Transaction_1 = require("./Transaction");
 const PoolSchema = new mongoose_1.Schema({
+    id: {
+        type: String,
+        required: true
+    },
     settledTotal: {
         type: Number,
         default: 0

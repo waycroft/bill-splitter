@@ -3,6 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TransactionModel = exports.TransactionSchema = void 0;
 const mongoose_1 = require("mongoose");
 exports.TransactionSchema = new mongoose_1.Schema({
+    id: {
+        type: String,
+        required: true
+    },
     date: Date,
     owner: mongoose_1.Schema.Types.ObjectId,
     amount: Number,

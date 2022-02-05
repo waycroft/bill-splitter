@@ -12,6 +12,10 @@ export interface Pool {
 }
 
 const PoolSchema = new Schema<Pool>({
+    id: {
+        type: String,
+        required: true
+    },
     settledTotal: {
         type: Number,
         default: 0

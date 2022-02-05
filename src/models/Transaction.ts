@@ -12,6 +12,10 @@ export interface Transaction {
 }
 
 export const TransactionSchema = new Schema<Transaction>({
+    id: {
+        type: String,
+        required: true
+    },
     date: Date,
     owner: Schema.Types.ObjectId,
     amount: Number,

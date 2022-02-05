@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createPool = exports.getAllPools = void 0;
+exports.getPoolMemberObjIds = exports.createPool = exports.getAllPools = void 0;
 const Pool_js_1 = require("../models/Pool.js");
 const exchange_id_js_1 = require("../helpers/exchange_id.js");
 const uuid_1 = require("uuid");
@@ -23,7 +23,6 @@ function getAllPools() {
 exports.getAllPools = getAllPools;
 function createPool(members) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield getPoolObjIds(members);
         let pool = new Pool_js_1.PoolModel({
             id: (0, uuid_1.v4)(),
             members: members
@@ -33,7 +32,7 @@ function createPool(members) {
     });
 }
 exports.createPool = createPool;
-function getPoolObjIds(members) {
+function getPoolMemberObjIds(members) {
     return __awaiter(this, void 0, void 0, function* () {
         for (let i = 0; i < members.length; i++) {
             let _id = yield (0, exchange_id_js_1.getObjId)('users', members[i]);
@@ -41,4 +40,5 @@ function getPoolObjIds(members) {
         }
     });
 }
+exports.getPoolMemberObjIds = getPoolMemberObjIds;
 //# sourceMappingURL=pool.js.map

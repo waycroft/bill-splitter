@@ -10,8 +10,6 @@ export async function getAllPools() {
 }
 
 export async function createPool(members: Array<string>) {
-    await getPoolObjIds(members);
-
     let pool: Document<Pool> = new PoolModel({
         id: uuidv4(),
         members: members
@@ -21,7 +19,7 @@ export async function createPool(members: Array<string>) {
     return pool;
 }
 
-async function getPoolObjIds(members: Array<string>) {
+export async function getPoolMemberObjIds(members: Array<string>) {
     for (let i = 0; i < members.length; i++) {
         let _id = await getObjId('users', members[i]);
         members[i] = _id;

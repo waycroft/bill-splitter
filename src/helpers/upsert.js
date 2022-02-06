@@ -12,13 +12,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.upsertDocument = void 0;
 const get_model_1 = require("./get_model");
 const debug = require('debug')('upsert');
-function upsertDocument(incomingData, queryOptions) {
+function upsertDocument(incomingData, queryOptions = { collectionName: "", identifier: "_id" }) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!queryOptions.identifier && !queryOptions.customQuery) {
-            throw 'No identifier or custom query passed, meaning that theres no means by which to locate an existing document...';
-        }
-        else if (!queryOptions.identifier || queryOptions.identifier === "") {
-            queryOptions.identifier = "_id";
+        if (queryOptions.collectionName === "") {
+            throw 'Must pass a collection name';
         }
         const targetModel = get_model_1.Collections[queryOptions.collectionName].model;
         let existingDocument;

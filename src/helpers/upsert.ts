@@ -18,11 +18,9 @@ interface QueryOptions {
  * @param {QueryOptions} queryOptions Options to query for an existing document. Simplest is find by identifier, otherwise a full mongo custom query can be passed.
  * @returns {Promise<Document>} A promise resolving to the upserted document.
  */
-export async function upsertDocument<T>(incomingData: T, queryOptions: QueryOptions): Promise<Document> {
-        if (!queryOptions.identifier && !queryOptions.customQuery) {
-            throw 'No identifier or custom query passed, meaning that theres no means by which to locate an existing document...'
-        } else if (!queryOptions.identifier || queryOptions.identifier === "") {
-            queryOptions.identifier = "_id";
+export async function upsertDocument<T>(incomingData: T, queryOptions: QueryOptions = {collectionName: "", identifier: "_id"}): Promise<Document> {
+        if (queryOptions.collectionName === "") {
+            throw 'Must pass a collection name'
         }
         const targetModel: Model<T> = Collections[queryOptions.collectionName].model;
 

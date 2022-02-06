@@ -1,7 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { Transaction, TransactionSchema } from './Transaction';
-
 export interface Pool {
     _id: string;
     id: string;
@@ -26,7 +25,11 @@ const PoolSchema = new Schema<Pool>({
         type: Number,
         default: 0
     },
-    members: [Schema.Types.ObjectId],
+    members: [{
+        firstName: String,
+        lastName: String,
+        _id: Schema.Types.ObjectId
+    }],
     transactions: [TransactionSchema],
     createdAt: {
         type: Date,

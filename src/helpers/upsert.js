@@ -11,23 +11,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.upsertDocument = void 0;
 const get_model_1 = require("./get_model");
-const debug = require('debug')('upsert.ts');
-function upsertDocument(collectionName, identifier, incomingData, query) {
+const debug = require('debug')('upsert');
+function upsertDocument(incomingData, queryOptions) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!identifier && !query) {
-            throw 'No identifier or query passed, meaning that theres no means by which to locate an existing document...';
+        if (!queryOptions.identifier && !queryOptions.customQuery) {
+            throw 'No identifier or custom query passed, meaning that theres no means by which to locate an existing document...';
         }
-        const targetModel = get_model_1.Collections[collectionName].model;
+        else if (!queryOptions.identifier || queryOptions.identifier === "") {
+            queryOptions.identifier = "_id";
+        }
+        const targetModel = get_model_1.Collections[queryOptions.collectionName].model;
         let existingDocument;
-        if (!query) {
-            existingDocument = yield targetModel.findOne({ [identifier]: incomingData[identifier] }).lean();
+        if (queryOptions.customQuery) {
+            existingDocument = yield targetModel.findOne(queryOptions.customQuery);
+        }
+        else if (typeof queryOptions.identifier === "string") {
+            existingDocument = yield targetModel.findOne({ [queryOptions.identifier]: incomingData[queryOptions.identifier] });
         }
         else {
-            existingDocument = yield targetModel.findOne(query).lean();
+            existingDocument = null;
         }
-        const docAlreadyExists = !!existingDocument;
-        if (docAlreadyExists) {
+        if (existingDocument != null) {
             debug('document exists');
+            for (const key of Object.keys(incomingData)) {
+                if (key != queryOptions.identifier) {
+                    existingDocument[key] = incomingData[key];
+                }
+            }
+            existingDocument.save();
             return existingDocument;
         }
         const newDoc = new targetModel(Object.assign({}, incomingData));

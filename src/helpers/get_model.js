@@ -7,15 +7,12 @@ const User_1 = require("../models/User");
 exports.Collections = {
     users: {
         model: User_1.UserModel,
-        singularName: "User"
     },
     pools: {
         model: Pool_1.PoolModel,
-        singularName: "Pool"
     },
     transactions: {
         model: Transaction_1.TransactionModel,
-        singularName: "Transaction"
     }
 };
 //# sourceMappingURL=get_model.js.map

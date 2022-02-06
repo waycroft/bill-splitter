@@ -13,7 +13,7 @@ exports.upsertTransaction = void 0;
 const upsert_js_1 = require("../helpers/upsert.js");
 function upsertTransaction(transactionData) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield (0, upsert_js_1.upsertDocument)('transactions', "_id", transactionData);
+        return yield (0, upsert_js_1.upsertDocument)(transactionData, { collectionName: "transactions" });
     });
 }
 exports.upsertTransaction = upsertTransaction;

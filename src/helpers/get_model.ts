@@ -1,18 +1,15 @@
-import { Pool, PoolModel } from "../models/Pool";
-import { Transaction, TransactionModel } from "../models/Transaction";
-import { User, UserModel } from "../models/User";
+import { PoolModel } from "../models/Pool";
+import { TransactionModel } from "../models/Transaction";
+import { UserModel } from "../models/User";
 
 export const Collections = {
     users: {
-        model: UserModel,
-        singularName: "User"
+        model: UserModel, 
     },
     pools: {
         model: PoolModel,
-        singularName: "Pool"
     },
     transactions: {
         model: TransactionModel,
-        singularName: "Transaction"
     }
 }

@@ -21,7 +21,7 @@ function getAllUsers() {
 exports.getAllUsers = getAllUsers;
 function upsertUser(userData) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield (0, upsert_js_1.upsertDocument)('users', 'email', userData);
+        return yield (0, upsert_js_1.upsertDocument)(userData, { collectionName: 'users', identifier: "email" });
     });
 }
 exports.upsertUser = upsertUser;

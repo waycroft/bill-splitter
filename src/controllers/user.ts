@@ -7,5 +7,5 @@ export async function getAllUsers() {
 }
 
 export async function upsertUser(userData: User) {
-    return await upsertDocument('users', 'email', userData);
+    return await upsertDocument<User>(userData, { collectionName: 'users', identifier: "email" });
 }

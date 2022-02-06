@@ -18,7 +18,11 @@ const PoolSchema = new mongoose_1.Schema({
         type: Number,
         default: 0
     },
-    members: [mongoose_1.Schema.Types.ObjectId],
+    members: [{
+            firstName: String,
+            lastName: String,
+            _id: mongoose_1.Schema.Types.ObjectId
+        }],
     transactions: [Transaction_1.TransactionSchema],
     createdAt: {
         type: Date,

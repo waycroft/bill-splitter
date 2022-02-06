@@ -1,7 +1,7 @@
-import { Document } from 'mongoose';
 import { Pool, PoolModel } from '../models/Pool.js';
+import { LeanUser } from '../models/User.js';
 import { getObjId } from '../helpers/exchange_id.js';
-import { v4 as uuidv4 } from 'uuid';
+import { upsertDocument } from '../helpers/upsert.js';
 const debug = require('debug')('pools')
 
 export async function getAllPools() {
@@ -10,25 +10,19 @@ export async function getAllPools() {
 }
 
 export async function upsertPool(poolData: Pool) {
-    const existingPool = await PoolModel.findOne({ members: { $all: poolData.members }}).lean();
-    const poolAlreadyExists = !!existingPool;
-
-    if (poolAlreadyExists) {
-        debug('pool exists')
-        return existingPool;
-    }
-    
-    const pool: Document<Pool> = new PoolModel({
-        id: uuidv4(),
-        members: poolData.members
+    const query = { members: { $all: poolData.members }};
+    return await upsertDocument<Pool>(poolData, {
+        collectionName: 'pools',  
+        customQuery: query
     });
-    await pool.save();
-    return pool;
 }
 
-export async function getPoolMemberObjIds(members: Array<string>) {
+export async function getPoolMemberObjIds(members: Array<LeanUser>): Promise<Array<LeanUser>> {
     for (let i = 0; i < members.length; i++) {
-        let _id = await getObjId('users', members[i]);
-        members[i] = _id;
+        if (typeof members[i] !== "string") {
+            let _id = await getObjId('users', members[i].id);
+            members[i]._id = _id;
+        }
     }
+    return members;
 }

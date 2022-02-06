@@ -1,5 +1,4 @@
 import { Schema, ObjectId, model } from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
 export interface User {
     _id: string;
     id: string;
@@ -19,11 +18,6 @@ export type LeanUser = Pick<User, "_id" | "id" | "firstName" | "lastName">;
 
 
 const UserSchema = new Schema<User>({
-    id: {
-        type: String,
-        required: true,
-        default: uuidv4()
-    },
     firstName: String,
     lastName: String,
     email: String,

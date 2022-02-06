@@ -2,13 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserModel = void 0;
 const mongoose_1 = require("mongoose");
-const uuid_1 = require("uuid");
 const UserSchema = new mongoose_1.Schema({
-    id: {
-        type: String,
-        required: true,
-        default: (0, uuid_1.v4)()
-    },
     firstName: String,
     lastName: String,
     email: String,

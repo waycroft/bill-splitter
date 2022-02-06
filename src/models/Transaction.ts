@@ -1,5 +1,4 @@
 import { Schema, model } from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
 
 export interface PayeeData {
     id: string;
@@ -15,17 +14,13 @@ export interface Transaction {
     amount: number;
     category: string;
     memo: string;
-    payees: Array<string>;
+    payees: Array<PayeeData>;
 }
 
+// transactions will be stored in buckets by pool / bucket number. 50 transactions per bucket. 
 export const TransactionSchema = new Schema<Transaction>({
     poolId: Schema.Types.ObjectId,
     bucketCounter: Number,
-    id: {
-        type: String,
-        required: true,
-        default: uuidv4()
-    },
     date: {
         type: Date,
         default: new Date()
@@ -34,7 +29,7 @@ export const TransactionSchema = new Schema<Transaction>({
     amount: Number,
     category: String,
     memo: String,
-    payees: [Schema.Types.ObjectId]
+    payees: [Schema.Types.ObjectId] // todo: payee data schema
 })
 
 export const TransactionModel = model<Transaction>('Transaction', TransactionSchema, 'transactions');

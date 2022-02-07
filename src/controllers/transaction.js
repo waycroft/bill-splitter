@@ -12,31 +12,46 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.upsertTransaction = void 0;
 const Transaction_js_1 = require("../models/Transaction.js");
 const Pool_js_1 = require("../models/Pool.js");
-function upsertTransaction(transactionData) {
+function upsertTransaction(requestBody) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield updatePoolsTransactions(transactionData);
-        yield addTransactionToBucket(transactionData);
+        yield pushToPoolsTransactions(requestBody);
+        return yield addTransactionToBucket(requestBody);
     });
 }
 exports.upsertTransaction = upsertTransaction;
-function updatePoolsTransactions(transactionData) {
+function pushToPoolsTransactions(requestBody) {
     return __awaiter(this, void 0, void 0, function* () {
-        let pool = yield Pool_js_1.PoolModel.findOne({ _id: transactionData.pool_id });
+        let pool = yield Pool_js_1.PoolModel.findOne({ _id: requestBody.pool_id });
         if (pool && pool.transactions.length >= 25) {
             pool.transactions.shift();
         }
         if (pool) {
-            pool.transactions.push(transactionData);
+            pool.transactions.push(requestBody.transaction);
             yield pool.save();
+        }
+        else {
+            throw 'Couldn\'t find pool';
         }
     });
 }
-function addTransactionToBucket(transactionData) {
+function addTransactionToBucket(requestBody) {
     return __awaiter(this, void 0, void 0, function* () {
-        let transactionBucket = yield Transaction_js_1.TransactionBucketModel.findOne({ pool_id: transactionData.pool_id, transactions_size: { $lt: 50 } });
-        if (transactionBucket != null) {
-            delete transactionData.pool_id;
-            transactionBucket.transactions.push(transactionData);
+        let existingBucket = yield Transaction_js_1.TransactionBucketModel.findOne({ pool_id: requestBody.pool_id, transactions_size: { $lt: 50 } });
+        if (existingBucket) {
+            existingBucket.transactions.push(requestBody.transaction);
+            existingBucket.transactions_size += 1;
+            existingBucket.end_date = requestBody.transaction.date;
+            return yield existingBucket.save();
+        }
+        else {
+            let newBucket = new Transaction_js_1.TransactionBucketModel({
+                pool_id: requestBody.pool_id,
+                start_date: requestBody.transaction.date,
+                end_date: requestBody.transaction.date,
+                transactions: [requestBody.transaction],
+                transactions_size: 1
+            });
+            return yield newBucket.save();
         }
     });
 }

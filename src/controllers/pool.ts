@@ -6,23 +6,23 @@ export async function getAllPools() {
     return pools;
 }
 
-export async function upsertPool(poolData: Pool) {
-    if (!poolData._id) {
-        const existingPool = await PoolModel.findOne({ members: { $all: poolData.members }});
+export async function upsertPool(requestBody: Pool) {
+    if (!requestBody._id) {
+        const existingPool = await PoolModel.findOne({ members: { $all: requestBody.members }});
         if (!existingPool) {
             const pool = new PoolModel({
-                members: poolData.members
+                members: requestBody.members
             })
             return await pool.save();
         } else {
-            existingPool.members = poolData.members;
+            existingPool.members = requestBody.members;
             return await existingPool.save();
         }
     }
 
-    let pool = await PoolModel.findOne({ _id: poolData._id });
+    let pool = await PoolModel.findOne({ _id: requestBody._id });
     if (pool != null) {
-        pool.members = poolData.members;
+        pool.members = requestBody.members;
         return await pool.save();
     } else {
         throw 'Error with upsertPool'

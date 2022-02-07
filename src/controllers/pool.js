@@ -19,24 +19,24 @@ function getAllPools() {
     });
 }
 exports.getAllPools = getAllPools;
-function upsertPool(poolData) {
+function upsertPool(requestBody) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!poolData._id) {
-            const existingPool = yield Pool_js_1.PoolModel.findOne({ members: { $all: poolData.members } });
+        if (!requestBody._id) {
+            const existingPool = yield Pool_js_1.PoolModel.findOne({ members: { $all: requestBody.members } });
             if (!existingPool) {
                 const pool = new Pool_js_1.PoolModel({
-                    members: poolData.members
+                    members: requestBody.members
                 });
                 return yield pool.save();
             }
             else {
-                existingPool.members = poolData.members;
+                existingPool.members = requestBody.members;
                 return yield existingPool.save();
             }
         }
-        let pool = yield Pool_js_1.PoolModel.findOne({ _id: poolData._id });
+        let pool = yield Pool_js_1.PoolModel.findOne({ _id: requestBody._id });
         if (pool != null) {
-            pool.members = poolData.members;
+            pool.members = requestBody.members;
             return yield pool.save();
         }
         else {

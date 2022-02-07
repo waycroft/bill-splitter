@@ -14,7 +14,11 @@ export interface Transaction {
     category: string;
     memo: string;
     payees: Array<PayeeData>;
-    pool_id?: string;
+}
+
+export interface TransactionRequest {
+    pool_id: string;
+    transaction: Transaction
 }
 
 export interface TransactionBucket {

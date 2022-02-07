@@ -1,31 +1,28 @@
 import { Schema, model } from 'mongoose';
 import { Transaction, TransactionSchema } from './Transaction';
+import { LeanUser } from './User';
+
 export interface Pool {
     _id: string;
-    id: string;
-    settledTotal: number,
-    unsettledTotal: number,
-    members: Array<string>,
+    settled_total: number,
+    unsettled_total: number,
+    members: Array<LeanUser>,
     transactions: Array<Transaction>,
-    createdAt: Date
+    created_at: Date
 }
 
 const PoolSchema = new Schema<Pool>({
-    settledTotal: {
+    settled_total: {
         type: Number,
         default: 0
     },
-    unsettledTotal: {
+    unsettled_total: {
         type: Number,
         default: 0
     },
-    members: [{
-        firstName: String,
-        lastName: String,
-        _id: Schema.Types.ObjectId
-    }],
+    members: [Schema.Types.Mixed],
     transactions: [TransactionSchema],
-    createdAt: {
+    created_at: {
         type: Date,
         default: new Date()
     }

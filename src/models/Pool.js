@@ -4,21 +4,17 @@ exports.PoolModel = void 0;
 const mongoose_1 = require("mongoose");
 const Transaction_1 = require("./Transaction");
 const PoolSchema = new mongoose_1.Schema({
-    settledTotal: {
+    settled_total: {
         type: Number,
         default: 0
     },
-    unsettledTotal: {
+    unsettled_total: {
         type: Number,
         default: 0
     },
-    members: [{
-            firstName: String,
-            lastName: String,
-            _id: mongoose_1.Schema.Types.ObjectId
-        }],
+    members: [mongoose_1.Schema.Types.Mixed],
     transactions: [Transaction_1.TransactionSchema],
-    createdAt: {
+    created_at: {
         type: Date,
         default: new Date()
     }

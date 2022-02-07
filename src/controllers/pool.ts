@@ -1,7 +1,4 @@
 import { Pool, PoolModel } from '../models/Pool.js';
-import { LeanUser } from '../models/User.js';
-import { getObjId } from '../helpers/exchange_id.js';
-import { upsertDocument } from '../helpers/upsert.js';
 const debug = require('debug')('pools')
 
 export async function getAllPools() {
@@ -10,19 +7,24 @@ export async function getAllPools() {
 }
 
 export async function upsertPool(poolData: Pool) {
-    const query = { members: { $all: poolData.members }};
-    return await upsertDocument<Pool>(poolData, {
-        collectionName: 'pools',  
-        customQuery: query
-    });
-}
-
-export async function getPoolMemberObjIds(members: Array<LeanUser>): Promise<Array<LeanUser>> {
-    for (let i = 0; i < members.length; i++) {
-        if (typeof members[i] !== "string") {
-            let _id = await getObjId('users', members[i].id);
-            members[i]._id = _id;
+    if (!poolData._id) {
+        const existingPool = await PoolModel.findOne({ members: { $all: poolData.members }});
+        if (!existingPool) {
+            const pool = new PoolModel({
+                members: poolData.members
+            })
+            return await pool.save();
+        } else {
+            existingPool.members = poolData.members;
+            return await existingPool.save();
         }
     }
-    return members;
+
+    let pool = await PoolModel.findOne({ _id: poolData._id });
+    if (pool != null) {
+        pool.members = poolData.members;
+        return await pool.save();
+    } else {
+        throw 'Error with upsertPool'
+    }
 }

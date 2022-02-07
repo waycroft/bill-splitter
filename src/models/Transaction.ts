@@ -5,31 +5,45 @@ export interface PayeeData {
     amount: number;
 }
 export interface Transaction {
-    poolId: string;
-    bucketCounter: number;
     _id: string;
-    id: string;
     date: Date;
     owner: string;
+    owner_amount: number;
     amount: number;
     category: string;
     memo: string;
     payees: Array<PayeeData>;
+    pool_id?: string;
 }
 
-// transactions will be stored in buckets by pool / bucket number. 50 transactions per bucket. 
+export interface TransactionBucket {
+    _id: string;
+    pool_id: string;
+    start_date: Date;
+    end_date: Date;
+    transactions: Array<Transaction>;
+    transactions_size: number;
+}
+
 export const TransactionSchema = new Schema<Transaction>({
-    poolId: Schema.Types.ObjectId,
-    bucketCounter: Number,
     date: {
         type: Date,
         default: new Date()
     },
     owner: Schema.Types.ObjectId,
+    owner_amount: Number,
     amount: Number,
     category: String,
     memo: String,
-    payees: [Schema.Types.ObjectId] // todo: payee data schema
+    payees: [Schema.Types.Mixed]
 })
 
-export const TransactionModel = model<Transaction>('Transaction', TransactionSchema, 'transactions');
+export const TransactionBucketSchema = new Schema<TransactionBucket>({
+    pool_id: Schema.Types.ObjectId,
+    start_date: Date,
+    end_date: Date,
+    transactions: [TransactionSchema],
+    transactions_size: Number
+})
+
+export const TransactionBucketModel = model<TransactionBucket>('TransactionBucket', TransactionBucketSchema, 'transactions');

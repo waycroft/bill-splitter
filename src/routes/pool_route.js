@@ -40,10 +40,6 @@ router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(500).json({ error: String(error) });
     }
 }));
-router.post('/', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, pool_js_1.getPoolMemberObjIds)(req.body.members);
-    next();
-}));
 router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         res.send(yield (0, pool_js_1.upsertPool)(req.body));

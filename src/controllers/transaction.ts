@@ -1,20 +1,30 @@
-import { Transaction } from '../models/Transaction.js';
-import { Pool, PoolModel } from '../models/Pool.js';
-import { upsertDocument } from '../helpers/upsert.js';
-import { getObjId } from '../helpers/exchange_id.js';
-import { HydratedDocument } from 'mongoose';
+import { Transaction, TransactionBucketModel } from '../models/Transaction.js';
+import { PoolModel } from '../models/Pool.js';
 
 export async function upsertTransaction(transactionData: Transaction) {
-    let pool: HydratedDocument<Pool> | null = await PoolModel.findOne(
-        { _id: await getObjId<Pool>('pools', transactionData.poolId) }
+    await updatePoolsTransactions(transactionData);
+    await addTransactionToBucket(transactionData);
+}
+
+async function addTransactionToBucket(transactionData: Transaction) {
+    let transactionBucket = await TransactionBucketModel.findOne(
+        { pool_id: transactionData.pool_id, transactions_size: { $lt: 50 } }
+    );
+    if (transactionBucket != null) {
+        delete transactionData.pool_id;
+        transactionBucket.transactions.push(transactionData);
+    }
+}
+
+async function updatePoolsTransactions(transactionData: Transaction) {
+    let pool = await PoolModel.findOne(
+        { _id: transactionData.pool_id }
     );
     if (pool && pool.transactions.length >= 25) {
         pool.transactions.shift();
-    } 
+    }
     if (pool) {
-        pool.transactions.push(transactionData)
+        pool.transactions.push(transactionData);
         await pool.save();
     }
-    
-    return await upsertDocument<Transaction>(transactionData, { collectionName: "transactions" });
 }

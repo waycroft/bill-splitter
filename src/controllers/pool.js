@@ -9,10 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPoolMemberObjIds = exports.upsertPool = exports.getAllPools = void 0;
+exports.upsertPool = exports.getAllPools = void 0;
 const Pool_js_1 = require("../models/Pool.js");
-const exchange_id_js_1 = require("../helpers/exchange_id.js");
-const upsert_js_1 = require("../helpers/upsert.js");
 const debug = require('debug')('pools');
 function getAllPools() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -23,24 +21,28 @@ function getAllPools() {
 exports.getAllPools = getAllPools;
 function upsertPool(poolData) {
     return __awaiter(this, void 0, void 0, function* () {
-        const query = { members: { $all: poolData.members } };
-        return yield (0, upsert_js_1.upsertDocument)(poolData, {
-            collectionName: 'pools',
-            customQuery: query
-        });
+        if (!poolData._id) {
+            const existingPool = yield Pool_js_1.PoolModel.findOne({ members: { $all: poolData.members } });
+            if (!existingPool) {
+                const pool = new Pool_js_1.PoolModel({
+                    members: poolData.members
+                });
+                return yield pool.save();
+            }
+            else {
+                existingPool.members = poolData.members;
+                return yield existingPool.save();
+            }
+        }
+        let pool = yield Pool_js_1.PoolModel.findOne({ _id: poolData._id });
+        if (pool != null) {
+            pool.members = poolData.members;
+            return yield pool.save();
+        }
+        else {
+            throw 'Error with upsertPool';
+        }
     });
 }
 exports.upsertPool = upsertPool;
-function getPoolMemberObjIds(members) {
-    return __awaiter(this, void 0, void 0, function* () {
-        for (let i = 0; i < members.length; i++) {
-            if (typeof members[i] !== "string") {
-                let _id = yield (0, exchange_id_js_1.getObjId)('users', members[i].id);
-                members[i]._id = _id;
-            }
-        }
-        return members;
-    });
-}
-exports.getPoolMemberObjIds = getPoolMemberObjIds;
 //# sourceMappingURL=pool.js.map

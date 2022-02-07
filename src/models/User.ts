@@ -1,39 +1,37 @@
 import { Schema, ObjectId, model } from 'mongoose';
 export interface User {
     _id: string;
-    id: string;
-    firstName: string;
-    lastName: string;
+    first_name: string;
+    last_name: string;
     email: string,
     password: string,
-    createdAt: Date,
-    lastLoginAt: Date,
+    created_at: Date,
+    last_login_at: Date,
     pools: Array<ObjectId>,
     transactions: Array<ObjectId>,
-    totalOwed: number,
-    totalOwes: number
+    total_owed: number,
+    total_owes: number
 }
 
-export type LeanUser = Pick<User, "_id" | "id" | "firstName" | "lastName">;
-
+export type LeanUser = Pick<User, "_id" | "first_name" | "last_name">;
 
 const UserSchema = new Schema<User>({
-    firstName: String,
-    lastName: String,
+    first_name: String,
+    last_name: String,
     email: String,
     password: String,
-    createdAt: {
+    created_at: {
         type: Date,
         default: new Date()
     },
-    lastLoginAt: {
+    last_login_at: {
         type: Date,
         default: new Date()
     },
     pools: [Schema.Types.ObjectId],
     transactions: [Schema.Types.ObjectId],
-    totalOwed: Number,
-    totalOwes: Number,
+    total_owed: Number,
+    total_owes: Number,
 })
 
 export const UserModel = model<User>('User', UserSchema, 'users');

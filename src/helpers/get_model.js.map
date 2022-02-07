@@ -1,1 +1,0 @@
-{"version":3,"file":"get_model.js","sourceRoot":"","sources":["get_model.ts"],"names":[],"mappings":";;;AAAA,yCAA2C;AAC3C,uDAAyD;AACzD,yCAA2C;AAE9B,QAAA,WAAW,GAAG;IACvB,KAAK,EAAE;QACH,KAAK,EAAE,gBAAS;KACnB;IACD,KAAK,EAAE;QACH,KAAK,EAAE,gBAAS;KACnB;IACD,YAAY,EAAE;QACV,KAAK,EAAE,8BAAgB;KAC1B;CACJ,CAAA"}

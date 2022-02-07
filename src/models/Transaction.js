@@ -7,6 +7,7 @@ exports.TransactionSchema = new mongoose_1.Schema({
         type: Date,
         default: new Date()
     },
+    total: Number,
     owner: mongoose_1.Schema.Types.ObjectId,
     owner_amount: Number,
     amount: Number,

@@ -7,6 +7,7 @@ export interface PayeeData {
 export interface Transaction {
     _id: string;
     date: Date;
+    total: number;
     owner: string;
     owner_amount: number;
     amount: number;
@@ -30,6 +31,7 @@ export const TransactionSchema = new Schema<Transaction>({
         type: Date,
         default: new Date()
     },
+    total: Number,
     owner: Schema.Types.ObjectId,
     owner_amount: Number,
     amount: Number,

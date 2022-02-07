@@ -19,15 +19,6 @@ function upsertTransaction(transactionData) {
     });
 }
 exports.upsertTransaction = upsertTransaction;
-function addTransactionToBucket(transactionData) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let transactionBucket = yield Transaction_js_1.TransactionBucketModel.findOne({ pool_id: transactionData.pool_id, transactions_size: { $lt: 50 } });
-        if (transactionBucket != null) {
-            delete transactionData.pool_id;
-            transactionBucket.transactions.push(transactionData);
-        }
-    });
-}
 function updatePoolsTransactions(transactionData) {
     return __awaiter(this, void 0, void 0, function* () {
         let pool = yield Pool_js_1.PoolModel.findOne({ _id: transactionData.pool_id });
@@ -37,6 +28,15 @@ function updatePoolsTransactions(transactionData) {
         if (pool) {
             pool.transactions.push(transactionData);
             yield pool.save();
+        }
+    });
+}
+function addTransactionToBucket(transactionData) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let transactionBucket = yield Transaction_js_1.TransactionBucketModel.findOne({ pool_id: transactionData.pool_id, transactions_size: { $lt: 50 } });
+        if (transactionBucket != null) {
+            delete transactionData.pool_id;
+            transactionBucket.transactions.push(transactionData);
         }
     });
 }

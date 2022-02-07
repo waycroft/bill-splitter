@@ -6,16 +6,6 @@ export async function upsertTransaction(transactionData: Transaction) {
     await addTransactionToBucket(transactionData);
 }
 
-async function addTransactionToBucket(transactionData: Transaction) {
-    let transactionBucket = await TransactionBucketModel.findOne(
-        { pool_id: transactionData.pool_id, transactions_size: { $lt: 50 } }
-    );
-    if (transactionBucket != null) {
-        delete transactionData.pool_id;
-        transactionBucket.transactions.push(transactionData);
-    }
-}
-
 async function updatePoolsTransactions(transactionData: Transaction) {
     let pool = await PoolModel.findOne(
         { _id: transactionData.pool_id }
@@ -26,5 +16,15 @@ async function updatePoolsTransactions(transactionData: Transaction) {
     if (pool) {
         pool.transactions.push(transactionData);
         await pool.save();
+    }
+}
+
+async function addTransactionToBucket(transactionData: Transaction) {
+    let transactionBucket = await TransactionBucketModel.findOne(
+        { pool_id: transactionData.pool_id, transactions_size: { $lt: 50 } }
+    );
+    if (transactionBucket != null) {
+        delete transactionData.pool_id;
+        transactionBucket.transactions.push(transactionData);
     }
 }

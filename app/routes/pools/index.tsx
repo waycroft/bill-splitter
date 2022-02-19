@@ -1,14 +1,25 @@
-import { Link } from 'remix';
+import { Link, useLoaderData, json } from 'remix';
+import { PoolModel } from '~/models/PoolSchema';
+
+import type { Pool } from '~/models/PoolSchema';
+import type { LoaderFunction } from 'remix';
+
+export let loader: LoaderFunction = async () => {
+    const pools = await PoolModel.find().lean();
+    return json(pools)
+}
 
 export default function PoolsIndexRoute() {
-    const pools = ["A", "B", "C", "D"]
+    const poolData: Pool[] = useLoaderData();
+    console.log(poolData);
     return(
         <div>
             <ul>
-                <li><Link to={pools[0]}>Pool A</Link></li>
-                <li><Link to={pools[1]}>Pool B</Link></li>
-                <li><Link to={pools[2]}>Pool C</Link></li>
-                <li><Link to={pools[3]}>Pool D</Link></li>
+                {poolData.map((poolDoc: Pool) => {
+                    return(
+                        <li><Link to={poolDoc._id}>{poolDoc._id}</Link></li>
+                    )
+                })}
             </ul>
         </div>
     )

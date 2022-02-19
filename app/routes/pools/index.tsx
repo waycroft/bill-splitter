@@ -14,6 +14,8 @@ export default function PoolsIndexRoute() {
     console.log(poolData);
     return(
         <div>
+            <h1>Pools</h1>
+            <p>You owe: $420</p>
             <ul>
                 {poolData.map((poolDoc: Pool) => {
                     return(

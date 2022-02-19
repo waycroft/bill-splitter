@@ -1,6 +1,8 @@
 import { renderToString } from "react-dom/server";
 import { RemixServer } from "remix";
 import type { EntryContext } from "remix";
+import 'dotenv/config'
+import dbconnect from "./utils/dbconnect";
 
 export default function handleRequest(
   request: Request,
@@ -19,3 +21,5 @@ export default function handleRequest(
     headers: responseHeaders
   });
 }
+// todo: is this the best place for this?
+dbconnect();

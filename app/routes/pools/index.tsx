@@ -1,28 +1,44 @@
 import { Link, useLoaderData, json } from 'remix';
 import { PoolModel } from '~/models/PoolSchema';
+import { LeanUser } from '~/models/UserSchema';
+import { getPools } from '~/utils/pool.actions';
 
 import type { Pool } from '~/models/PoolSchema';
 import type { LoaderFunction } from 'remix';
 
 export let loader: LoaderFunction = async () => {
-    const pools = await PoolModel.find().lean();
-    return json(pools)
+    return json(await getPools());
 }
 
 export default function PoolsIndexRoute() {
     const poolData: Pool[] = useLoaderData();
-    console.log(poolData);
     return(
         <div>
-            <h1>Pools</h1>
-            <p>You owe: $420</p>
-            <ul>
-                {poolData.map((poolDoc: Pool) => {
-                    return(
-                        <li><Link to={poolDoc._id}>{poolDoc._id}</Link></li>
-                    )
-                })}
-            </ul>
+            <div>
+                <h1>Pools</h1>
+                <p>You owe: $420</p>
+            </div>
+            <div>
+                <Link to="new">Create Pool</Link>
+            </div>
+            <hr />
+            <div>
+                <table>
+                    { poolData.map((pool: Pool) => {
+                        return (
+                        <tr>
+                            <td><Link to={pool._id}>{pool._id}</Link></td>
+                            <td>Members: 
+                                <ul>
+                                    { pool.members.map((user: LeanUser) => {
+                                        return (<li>{ user.first_name + " " + user.last_name }</li>)
+                                    })}
+                                </ul>
+                            </td>
+                        </tr>)
+                    })}
+                </table>
+            </div>
         </div>
     )
 }

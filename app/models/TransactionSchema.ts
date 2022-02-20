@@ -1,4 +1,5 @@
 import mongoose, { Schema, model } from 'mongoose';
+import type { Model } from 'mongoose';
 
 export interface PayeeData {
     id: string;
@@ -52,4 +53,4 @@ export const TransactionBucketSchema = new Schema<TransactionBucket>({
     transactions_size: Number
 })
 
-export const TransactionBucketModel = mongoose.models.TransactionBucket || model<TransactionBucket>('TransactionBucket', TransactionBucketSchema, 'transactions');
+export const TransactionBucketModel: Model<TransactionBucket> = mongoose.models.TransactionBucket || model('TransactionBucket', TransactionBucketSchema, 'transactions');

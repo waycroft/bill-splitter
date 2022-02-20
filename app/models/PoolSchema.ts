@@ -1,8 +1,9 @@
 import mongoose, { Schema, model } from 'mongoose';
 import { TransactionSchema } from './TransactionSchema';
-import type { Transaction } from './TransactionSchema';
 import { LeanUser } from './UserSchema';
 
+import type { Model } from 'mongoose';
+import type { Transaction } from './TransactionSchema';
 export interface Pool {
     _id: string;
     settled_total: number,
@@ -22,11 +23,14 @@ export const PoolSchema = new Schema<Pool>({
         default: 0
     },
     members: [Schema.Types.Mixed],
-    transactions: [TransactionSchema],
+    transactions: {
+        type: [TransactionSchema],
+        default: []
+    },
     created_at: {
         type: Date,
         default: new Date()
     }
 })
 
-export const PoolModel = mongoose.models.Pool || model('Pool', PoolSchema, 'pools')
+export const PoolModel: Model<Pool> = mongoose.models.Pool || model('Pool', PoolSchema, 'pools')

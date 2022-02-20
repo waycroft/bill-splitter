@@ -1,4 +1,6 @@
 import mongoose, { Schema, ObjectId, model } from 'mongoose';
+import type { Model } from 'mongoose';
+
 export interface User {
     _id: string;
     first_name: string;
@@ -34,4 +36,4 @@ const UserSchema = new Schema<User>({
     total_owes: Number,
 })
 
-export const UserModel = mongoose.models.User || model<User>('User', UserSchema, 'users');
+export const UserModel: Model<User> = mongoose.models.User || model('User', UserSchema, 'users');

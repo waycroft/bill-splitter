@@ -19,7 +19,7 @@ export default function PoolsIndexRoute() {
                 <p>You owe: $420</p>
             </div>
             <div>
-                <Link to="new">Create Pool</Link>
+                <button className='btn'><Link to="new">Create Pool</Link></button>
             </div>
             <hr />
             <div>

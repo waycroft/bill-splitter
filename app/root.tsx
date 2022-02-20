@@ -6,7 +6,13 @@ import {
   Scripts,
   ScrollRestoration
 } from "remix";
+import styles from "./tailwind.css";
+
 import type { MetaFunction } from "remix";
+
+export function links() {
+  return [{ rel: "stylesheet", href: styles }];
+}
 
 export const meta: MetaFunction = () => {
   return { title: "Bill Splitter" };

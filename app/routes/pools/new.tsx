@@ -1,17 +1,21 @@
-import { useFetcher, Form, useTransition, redirect, json } from "remix";
-import { useState, useEffect } from "react";
+import { useFetcher, Form, useTransition, redirect } from "remix";
+import { useState } from "react";
+import Chip from "~/components/Chip";
+import { upsertPool } from "~/utils/pool.actions";
 
 import type { ActionFunction } from "remix";
 import type { LeanUser } from "~/models/UserSchema";
-import Chip from "~/components/Chip";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
-  // todo: because i'm sending multiple at the same time, all the values for 
-  // _id are getting placed in a single array, etc.
-  // need to pull them back out so that each object is compartmentalized
-  console.log(formData);
-  return null;
+  let membersToAdd: LeanUser[] = [];
+
+  for (const [, val] of formData) {
+    membersToAdd.push(JSON.parse(val.toString()));
+  }
+  const newPool = await upsertPool(membersToAdd);
+  // todo: validation guards
+  return redirect(`/pools/${newPool._id}`);
 };
 
 export default function NewPoolRoute() {
@@ -51,22 +55,8 @@ export default function NewPoolRoute() {
                     hidden
                     readOnly
                     type="text"
-                    name="_id"
-                    value={user._id}
-                  />
-                  <input
-                    hidden
-                    readOnly
-                    type="text"
-                    name="first_name"
-                    value={user.first_name}
-                  />
-                  <input
-                    hidden
-                    readOnly
-                    type="text"
-                    name="last_name"
-                    value={user.last_name}
+                    name={user._id}
+                    value={JSON.stringify(user)}
                   />
                 </div>
               );

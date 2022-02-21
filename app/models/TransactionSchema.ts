@@ -1,15 +1,15 @@
-import mongoose, { Schema, model } from 'mongoose';
+import mongoose, { Schema, ObjectId, model } from 'mongoose';
 import type { Model } from 'mongoose';
 
 export interface PayeeData {
-    id: string;
+    _id: ObjectId;
     amount: number;
 }
 export interface Transaction {
-    _id: string;
+    _id: ObjectId;
     date: Date;
     total: number;
-    owner: string;
+    owner: ObjectId;
     owner_amount: number;
     amount: number;
     category: string;
@@ -18,13 +18,13 @@ export interface Transaction {
 }
 
 export interface TransactionRequest {
-    pool_id: string;
+    pool_id: ObjectId;
     transaction: Transaction
 }
 
 export interface TransactionBucket {
-    _id: string;
-    pool_id: string;
+    _id: ObjectId;
+    pool_id: ObjectId;
     start_date: Date;
     end_date: Date;
     transactions: Array<Transaction>;

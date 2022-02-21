@@ -2,7 +2,7 @@ import mongoose, { Schema, ObjectId, model } from 'mongoose';
 import type { Model } from 'mongoose';
 
 export interface User {
-    _id: string;
+    _id: ObjectId;
     first_name: string;
     last_name: string;
     email: string,

@@ -54,5 +54,5 @@ export const TransactionBucketSchema = new Schema<TransactionBucket>({
 });
 
 export const TransactionBucketModel: Model<TransactionBucket> =
-  mongoose.models.TransactionBucket ||
+  mongoose.models?.TransactionBucket ??
   model("TransactionBucket", TransactionBucketSchema, "transactions");

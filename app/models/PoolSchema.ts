@@ -34,4 +34,4 @@ export const PoolSchema = new Schema<Pool>({
 });
 
 export const PoolModel: Model<Pool> =
-  mongoose.models.Pool || model("Pool", PoolSchema, "pools");
+  mongoose.models?.Pool ?? model("Pool", PoolSchema, "pools");

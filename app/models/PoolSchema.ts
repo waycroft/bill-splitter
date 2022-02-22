@@ -1,36 +1,37 @@
-import mongoose, { Schema, ObjectId, model } from 'mongoose';
-import { TransactionSchema } from './TransactionSchema';
-import { LeanUser } from './UserSchema';
+import mongoose, { Schema, ObjectId, model } from "mongoose";
+import { TransactionSchema } from "./TransactionSchema";
+import { LeanUser } from "./UserSchema";
 
-import type { Model } from 'mongoose';
-import type { Transaction } from './TransactionSchema';
+import type { Model } from "mongoose";
+import type { Transaction } from "./TransactionSchema";
 export interface Pool {
-    _id: ObjectId;
-    settled_total: number,
-    unsettled_total: number,
-    members: Array<LeanUser>,
-    transactions: Array<Transaction>,
-    created_at: Date
+  _id: ObjectId;
+  settled_total: number;
+  unsettled_total: number;
+  members: Array<LeanUser>;
+  transactions: Array<Transaction>;
+  created_at: Date;
 }
 
 export const PoolSchema = new Schema<Pool>({
-    settled_total: {
-        type: Number,
-        default: 0
-    },
-    unsettled_total: {
-        type: Number,
-        default: 0
-    },
-    members: [Schema.Types.Mixed],
-    transactions: {
-        type: [TransactionSchema],
-        default: []
-    },
-    created_at: {
-        type: Date,
-        default: new Date()
-    }
-})
+  settled_total: {
+    type: Number,
+    default: 0,
+  },
+  unsettled_total: {
+    type: Number,
+    default: 0,
+  },
+  members: [Schema.Types.Mixed],
+  transactions: {
+    type: [TransactionSchema],
+    default: [],
+  },
+  created_at: {
+    type: Date,
+    default: new Date(),
+  },
+});
 
-export const PoolModel: Model<Pool> = mongoose.models.Pool || model('Pool', PoolSchema, 'pools')
+export const PoolModel: Model<Pool> =
+  mongoose.models.Pool || model("Pool", PoolSchema, "pools");

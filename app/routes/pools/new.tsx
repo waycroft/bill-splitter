@@ -1,19 +1,20 @@
 import { useFetcher, Form, useTransition, redirect } from "remix";
 import { useState } from "react";
-import Chip from "~/components/Chip";
 import { upsertPool } from "~/utils/pool.actions";
+import Chip from "~/components/Chip";
+import invariant from "tiny-invariant";
+import { LeanUser } from "~/models/UserSchema";
 
 import type { ActionFunction } from "remix";
-import type { LeanUser } from "~/models/UserSchema";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   let membersToAdd: LeanUser[] = [];
 
   for (const [, val] of formData) {
-    membersToAdd.push(JSON.parse(val.toString()));
+    const leanUser: LeanUser = JSON.parse(val.toString());
+    membersToAdd.push(leanUser);
   }
-  // todo: add pool to user object
   const newPool = await upsertPool(membersToAdd);
   // todo: validation guards
   return redirect(`/pools/${newPool._id}`);
@@ -24,7 +25,7 @@ export default function NewPoolRoute() {
   const transition = useTransition();
 
   return (
-    <div>
+    <div className='container mx-auto'>
       <div>
         <UserSearch
           currentResults={selectedUsers}
@@ -36,7 +37,7 @@ export default function NewPoolRoute() {
           <ul>
             {selectedUsers.map((user: LeanUser) => {
               return (
-                <li key={(user._id).toString()}>
+                <li key={user._id.toString()}>
                   <Chip displayText={user.first_name + " " + user.last_name} />
                 </li>
               );
@@ -48,7 +49,7 @@ export default function NewPoolRoute() {
       </div>
       <div>
         {selectedUsers.length > 0 ? (
-          <Form method="post" action='/pools/new'>
+          <Form method="post">
             {selectedUsers.map((user: LeanUser) => {
               return (
                 <div>
@@ -56,7 +57,7 @@ export default function NewPoolRoute() {
                     hidden
                     readOnly
                     type="text"
-                    name={(user._id).toString()}
+                    name={user._id.toString()}
                     value={JSON.stringify(user)}
                   />
                 </div>
@@ -84,7 +85,7 @@ function UserSearch({ currentResults, addResult }: Props) {
 
   return (
     <div>
-      <fetcher.Form method="post" action={`/users/search`}>
+      <fetcher.Form method="post" action="/users/search">
         <fieldset className="input-group rounded-md">
           <label tabIndex={0} className="m-1 text-lg font-bold">
             Add friends to pool
@@ -117,7 +118,7 @@ function UserSearch({ currentResults, addResult }: Props) {
             >
               {fetcher.data.map((user: LeanUser) => {
                 return (
-                  <li key={(user._id).toString()}>
+                  <li key={user._id.toString()}>
                     <a
                       onPointerDown={() => {
                         let combinedSelection = currentResults.concat(user);

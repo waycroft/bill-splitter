@@ -17,6 +17,11 @@ export interface User {
 
 export type LeanUser = Pick<User, "_id" | "first_name" | "last_name">;
 
+export const LeanUserSchema = new Schema<LeanUser>({
+  first_name: String,
+  last_name: String
+})
+
 const UserSchema = new Schema<User>({
   first_name: String,
   last_name: String,

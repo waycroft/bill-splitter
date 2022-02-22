@@ -13,6 +13,7 @@ export async function getPool(_id: string) {
 }
 
 export async function upsertPool(
+  // todo: lean users are being saved to members field with string object ids instead of real ones
   members: LeanUser[],
   poolId: string | null = null
 ) {

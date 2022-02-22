@@ -1,7 +1,8 @@
 import mongoose, { Schema, ObjectId, model } from "mongoose";
 import { TransactionSchema } from "./TransactionSchema";
-import { LeanUser } from "./UserSchema";
+import { LeanUserSchema } from "./UserSchema";
 
+import type { LeanUser } from "./UserSchema";
 import type { Model } from "mongoose";
 import type { Transaction } from "./TransactionSchema";
 export interface Pool {
@@ -22,7 +23,7 @@ export const PoolSchema = new Schema<Pool>({
     type: Number,
     default: 0,
   },
-  members: [Schema.Types.Mixed],
+  members: [LeanUserSchema],
   transactions: {
     type: [TransactionSchema],
     default: [],

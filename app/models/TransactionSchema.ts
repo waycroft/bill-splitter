@@ -7,7 +7,8 @@ export interface PayeeData {
 }
 export interface Transaction {
   _id: ObjectId;
-  date: Date;
+  transaction_date: Date;
+  created_at: Date;
   total: number;
   owner: ObjectId;
   owner_amount: number;
@@ -29,10 +30,15 @@ export interface TransactionBucket {
   end_date: Date;
   transactions: Array<Transaction>;
   transactions_size: number;
+  created_at: Date
 }
 
 export const TransactionSchema = new Schema<Transaction>({
-  date: {
+  created_at: {
+    type: Date,
+    default: new Date(),
+  },
+  transaction_date: {
     type: Date,
     default: new Date(),
   },

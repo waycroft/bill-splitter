@@ -18,7 +18,7 @@ export interface Transaction {
 }
 
 export interface TransactionRequest {
-  pool_id: ObjectId;
+  pool_id: string;
   transaction: Transaction;
 }
 

@@ -2,22 +2,26 @@ import { TransactionBucketModel } from "~/models/TransactionSchema";
 import { PoolModel } from "~/models/PoolSchema";
 
 import type {
-  TransactionBucket,
   Transaction,
   TransactionRequest,
 } from "~/models/TransactionSchema";
+import invariant from "tiny-invariant";
 
 export async function upsertTransaction(
   transactionRequest: TransactionRequest
 ) {
-  await pushToPoolsTransactions(
-    transactionRequest.pool_id,
-    transactionRequest.transaction
-  );
-  return await addTransactionToBucket(
-    transactionRequest.pool_id,
-    transactionRequest.transaction
-  );
+  try {
+    await pushToPoolsTransactions(
+      transactionRequest.pool_id,
+      transactionRequest.transaction
+    );
+    return await addTransactionToBucket(
+      transactionRequest.pool_id,
+      transactionRequest.transaction
+    );
+  } catch (error) {
+    console.error(error);
+    return { status: "error", message: JSON.stringify(error, null, '\t') }};
 }
 
 // semantically does this belong in the pools controller, or here?
@@ -26,33 +30,33 @@ async function pushToPoolsTransactions(
   transaction: Transaction
 ) {
   let pool = await PoolModel.findOne({ _id: poolId });
-  if (pool && pool.transactions.length >= 25) {
+  invariant(pool, "Could not find pool to push transaction to");
+  if (pool.transactions.length >= 25) {
     pool.transactions.shift();
   }
-  if (pool) {
-    pool.transactions.push(transaction);
-    await pool.save();
-  } else {
-    throw "Couldn't find pool";
-  }
+  pool.transactions.push(transaction);
+  await pool.save();
 }
 
-async function addTransactionToBucket(requestBody: TransactionRequest) {
+async function addTransactionToBucket(
+  pool_id: string,
+  transaction: Transaction
+) {
   let existingBucket = await TransactionBucketModel.findOne({
-    pool_id: requestBody.pool_id,
+    pool_id: pool_id,
     transactions_size: { $lt: 50 },
   });
   if (existingBucket) {
-    existingBucket.transactions.push(requestBody.transaction);
+    existingBucket.transactions.push(transaction);
     existingBucket.transactions_size += 1;
-    existingBucket.end_date = requestBody.transaction.date;
+    existingBucket.end_date = transaction.transaction_date;
     return await existingBucket.save();
   } else {
     let newBucket = new TransactionBucketModel({
-      pool_id: requestBody.pool_id,
-      start_date: requestBody.transaction.date,
-      end_date: requestBody.transaction.date,
-      transactions: [requestBody.transaction],
+      pool_id: pool_id,
+      start_date: transaction.transaction_date,
+      end_date: transaction.transaction_date,
+      transactions: [transaction],
       transactions_size: 1,
     });
     return await newBucket.save();

@@ -12,7 +12,6 @@ export let loader: LoaderFunction = async ({ params }) => {
 };
 
 export default function PoolRoute() {
-  const params = useParams();
   const data: Pool = useLoaderData<Pool>();
   return (
     <div className="container mx-auto">

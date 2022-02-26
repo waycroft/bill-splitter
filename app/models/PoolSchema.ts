@@ -25,7 +25,7 @@ export const PoolSchema = new Schema<Pool>({
   },
   members: [LeanUserSchema],
   transactions: {
-    type: [TransactionSchema],
+  type: [TransactionSchema],
     default: [],
   },
   created_at: {

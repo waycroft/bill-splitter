@@ -9,8 +9,8 @@ export interface Pool {
   _id: ObjectId;
   settled_total: number;
   unsettled_total: number;
-  members: Array<LeanUser>;
-  transactions: Array<Transaction>;
+  members: LeanUser[];
+  transactions: Transaction[];
   created_at: Date;
 }
 

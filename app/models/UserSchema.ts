@@ -9,8 +9,8 @@ export interface User {
   password: string;
   created_at: Date;
   last_login_at: Date;
-  pools: Array<ObjectId>;
-  transactions: Array<ObjectId>;
+  pools: ObjectId[];
+  transactions: ObjectId[];
   total_owed: number;
   total_owes: number;
 }

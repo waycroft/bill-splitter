@@ -27,7 +27,7 @@ export default function PoolRoute() {
           );
         })}
       </div>
-      <Link to={`transactions/new`}>
+      <Link to={`transactions/new?step=1&path::splitEven=true`}>
         <button className="btn">Add transaction</button>
       </Link>
       <div>

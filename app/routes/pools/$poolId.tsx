@@ -1,4 +1,4 @@
-import { useParams, Outlet, useLoaderData, json, Form, Link } from "remix";
+import { Outlet, useLoaderData, json, Link } from "remix";
 import invariant from "tiny-invariant";
 import { getPool } from "~/utils/pool.actions";
 import { Pool } from "~/models/PoolSchema";
@@ -11,8 +11,13 @@ export let loader: LoaderFunction = async ({ params }) => {
   return json(await getPool(params.poolId));
 };
 
+export type ContextType = {
+  members: LeanUser[];
+}
+
 export default function PoolRoute() {
   const data: Pool = useLoaderData<Pool>();
+  const context: ContextType = { members: data.members };
   return (
     <div className="container mx-auto">
       <div className="avatar-group">
@@ -31,7 +36,7 @@ export default function PoolRoute() {
         <button className="btn">Add transaction</button>
       </Link>
       <div>
-        <Outlet />
+        <Outlet context={context}/>
       </div>
     </div>
   );

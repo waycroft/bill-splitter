@@ -1,38 +1,45 @@
 import { useReducer } from "react";
+import { useOutletContext } from "remix";
 import { LeanUser } from "~/models/UserSchema";
-
+import { ContextType } from "~/routes/pools/$poolId";
+import { v4 as uuidv4 } from "uuid";
 interface Props {
   id: string;
   name: string;
-  payees: LeanUser[];
 }
 
 interface CustomSplitItemData {
+  id: string;
   itemName: string;
   value: number;
   payees: LeanUser[];
 }
 
-interface ReducerAction {
-  type: "ADD" | "REMOVE";
-  payload: CustomSplitItemData;
-}
+type ReducerAction =
+  | { type: "ADD"; payload: CustomSplitItemData }
+  | { type: "REMOVE"; itemToRemoveId: string };
 
 const reducer = (state: CustomSplitItemData[], action: ReducerAction) => {
   switch (action.type) {
     case "ADD":
       return state.concat(action.payload);
+    case "REMOVE":
+      return state.filter((item) => {
+        return item.id !== action.itemToRemoveId;
+      });
     default:
       throw new Error("Missing/bad reducer action");
   }
 };
 
-export default function ({ id, name, payees }: Props) {
+export default function ({ id, name }: Props) {
+  const { members } = useOutletContext<ContextType>();
   const initial: CustomSplitItemData[] = [
     {
-      itemName: "",
+      id: uuidv4(),
+      itemName: "garlic fries",
       value: 0,
-      payees: payees
+      payees: members,
     },
   ];
   const [state, dispatch] = useReducer(reducer, initial);
@@ -43,6 +50,7 @@ export default function ({ id, name, payees }: Props) {
           return (
             <div>
               <CustomSplitItem
+                id={item.id}
                 itemName={item.itemName}
                 value={item.value}
                 payees={item.payees}
@@ -50,6 +58,9 @@ export default function ({ id, name, payees }: Props) {
               <button
                 className="btn btn-primary rounded-full gap-1"
                 type="button"
+                onClick={() =>
+                  dispatch({ type: "REMOVE", itemToRemoveId: item.id })
+                }
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -72,24 +83,38 @@ export default function ({ id, name, payees }: Props) {
         <button
           name="addItem"
           type="button"
-          onClick={(e) => dispatch({ type: "ADD", payload: initial[0] })}
+          onClick={() =>
+            dispatch({
+              type: "ADD",
+              payload: {
+                id: uuidv4(),
+                // todo: fun: random name each new item
+                itemName: "mocha matcha",
+                value: 0,
+                payees: members,
+              },
+            })
+          }
+          className="btn btn-accent rounded"
         >
           Add another
         </button>
       </ul>
     </div>
-    // item list goes here, basically just some inputs (but not a form because supposedly you cant nest forms)
   );
 }
 
-function CustomSplitItem({ itemName, value, payees }: CustomSplitItemData) {
-  // single list item, aka collection of fields and a delete button
-  console.log('CustomSplitItem payees:', payees);
+function CustomSplitItem({ id, itemName, value, payees }: CustomSplitItemData) {
   return (
-    <li>
+    <li key={id}>
       <input type="text" name="itemNameInput" placeholder={itemName} />
       <input type="number" name="valueInput" placeholder={value.toString()} />
-      <select name="payeeSelect" id="payeeSelect">
+      <select
+        multiple
+        name="payeeSelect"
+        id="payeeSelect"
+        className="select w-full max-w-xs"
+      >
         {payees.map((payee: LeanUser) => {
           return (
             <option value={payee._id.toString()}>{payee.first_name}</option>

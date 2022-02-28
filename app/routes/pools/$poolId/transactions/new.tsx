@@ -99,7 +99,6 @@ export default function NewTransactionRoute() {
               <CustomSplitItemList
                 id="customSplitInput"
                 name="customSplitInput"
-                payees={poolData.members}
               />
             </div>
             <label

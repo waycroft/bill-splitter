@@ -4,14 +4,13 @@
 import { Form, redirect, useLoaderData, useSearchParams } from "remix";
 import invariant from "tiny-invariant";
 import { getPool } from "~/utils/pool.actions";
-import { insertTransaction } from "~/utils/transactions.actions";
-import { PayeeData } from "~/models/TransactionSchema";
 import CustomSplitItemList from "~/components/CustomSplitItemList";
 import { Pool } from "~/models/PoolSchema";
 import { LeanUser } from "~/models/UserSchema";
 import mongoose, { isValidObjectId } from "mongoose";
 
 import type { LoaderFunction, ActionFunction } from "remix";
+import { insertTransaction } from "~/utils/transactions.actions";
 
 export const loader: LoaderFunction = async ({ params }) => {
   invariant(params.poolId, "Could not read $poolId in path params");
@@ -30,7 +29,7 @@ interface RawTransactionInput {
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
-  const { totalAmountInput, categoryInput, memoInput, owner, payees } =
+  const { totalAmountInput, categoryInput, memoInput, owner, payees, poolId } =
     Object.fromEntries(formData);
   const newTransaction = {
     // todo: feature: actually allow user input for transaction date
@@ -53,6 +52,10 @@ export const action: ActionFunction = async ({ request }) => {
         return ele != undefined;
       }),
   };
+  insertTransaction({
+    pool_id: poolId.toString(),
+    transaction: newTransaction,
+  });
   // todo: validation: form validation
   return redirect("new");
 };
@@ -99,6 +102,12 @@ export default function NewTransactionRoute() {
                   }
                 })
                 .toString()}
+            />
+            <input
+              hidden
+              readOnly
+              name="poolId"
+              value={poolData._id.toString()}
             />
             {/* real input fields */}
             <label

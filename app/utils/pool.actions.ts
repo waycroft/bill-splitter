@@ -13,7 +13,7 @@ export async function getPool(_id: string) {
 }
 
 export async function upsertPool(
-  // todo: lean users are being saved to members field with string object ids instead of real ones
+  // todo: bug: lean users are being saved to members field with string object ids instead of real ones
   members: LeanUser[],
   poolId: string | null = null
 ) {
@@ -26,12 +26,12 @@ export async function upsertPool(
         members: members,
       });
       const newPool = await pool.save();
-      // todo: update user pools field
+      // todo: feature: update user pools field
       return newPool;
     } else {
       existingPool.members = members;
       const newPool = await existingPool.save();
-      // todo: update user pools field
+      // todo: feature: update user pools field
       return newPool;
     }
 
@@ -41,7 +41,7 @@ export async function upsertPool(
   let pool = await PoolModel.findOne({ _id: poolId });
   if (pool != null) {
     pool.members = members;
-    // todo: update user pools field
+    // todo: feature: update user pools field
     return await pool.save();
   } else {
     throw "Error with upsertPool, pool was likely deleted";

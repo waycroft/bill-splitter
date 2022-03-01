@@ -100,6 +100,7 @@ export default function ({ id, name }: Props) {
           Add another
         </button>
       </ul>
+      {/* todo: validation: display remaining amount as user adds splits, like YNAB. This will also be part of the form validation */}
     </div>
   );
 }
@@ -109,6 +110,7 @@ function CustomSplitItem({ id, itemName, value, payees }: CustomSplitItemData) {
     <li key={id}>
       <input type="text" name="itemNameInput" placeholder={itemName} />
       <input type="number" name="valueInput" placeholder={value.toString()} />
+      {/* todo: validation: should not be able to select all payees */}
       <select
         multiple
         name="payeeSelect"

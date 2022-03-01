@@ -16,7 +16,7 @@ export const action: ActionFunction = async ({ request }) => {
     membersToAdd.push(leanUser);
   }
   const newPool = await upsertPool(membersToAdd);
-  // todo: validation guards
+  // todo: validation: validation guards
   return redirect(`/pools/${newPool._id}`);
 };
 

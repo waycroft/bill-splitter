@@ -25,14 +25,14 @@ export default function PoolRoute() {
           return (
             <div className="avatar placeholder">
               <div className="w-12 bg-base-200">
-                {/* todo: use actual ul element for no-js/accessibility */}
+                {/* todo: accessibility: use actual ul element for no-js/accessibility */}
                 <span>{member.first_name[0] + member.last_name[0]}</span>
               </div>
             </div>
           );
         })}
       </div>
-      <Link to={`transactions/new?step=1&path::splitEven=true`}>
+      <Link to={`transactions/new?step=1&path=splitEvenly`}>
         <button className="btn">Add transaction</button>
       </Link>
       <div>

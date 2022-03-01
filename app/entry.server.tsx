@@ -21,5 +21,5 @@ export default function handleRequest(
     headers: responseHeaders
   });
 }
-// todo: is this the best place for this?
+// todo: architecture: is this the best place for this?
 dbconnect();

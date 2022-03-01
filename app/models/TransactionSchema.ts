@@ -25,7 +25,7 @@ export const PayeeDataSchema = new mongoose.Schema<PayeeData>({
   items: [SplitItemSchema]
 })
 export interface Transaction {
-  _id: ObjectId;
+  _id?: ObjectId;
   transaction_date: Date;
   created_at: Date;
   total: number;

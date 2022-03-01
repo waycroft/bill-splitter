@@ -7,7 +7,7 @@ import type {
   TransactionRequest,
 } from "~/models/TransactionSchema";
 
-export async function upsertTransaction(
+export async function insertTransaction(
   transactionRequest: TransactionRequest
 ) {
   try {

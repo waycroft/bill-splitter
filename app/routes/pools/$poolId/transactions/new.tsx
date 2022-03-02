@@ -29,16 +29,32 @@ interface RawTransactionInput {
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
-  const { totalAmountInput, categoryInput, memoInput, owner, payees, poolId } =
-    Object.fromEntries(formData);
+  const {
+    totalAmountInput,
+    categoryInput,
+    memoInput,
+    owner,
+    payees,
+    poolId,
+    path,
+  } = Object.fromEntries(formData);
+  const memberCount =
+    payees
+      .toString()
+      .split(",")
+      .filter((ele) => ele !== "").length + 1;
+  // todo: architecture: should there be a Transaction class that I can construct so data transform happens automatically/in one place?
   const newTransaction = {
+    pool_id: new mongoose.Types.ObjectId(poolId.toString()),
     // todo: feature: actually allow user input for transaction date
     transaction_date: new Date(),
     created_at: new Date(),
     total: Number(totalAmountInput),
     owner: new mongoose.Types.ObjectId(owner.toString()),
-    category: categoryInput,
-    memo: memoInput,
+    owner_amount:
+      path === "splitEvenly" ? Number(totalAmountInput) / memberCount : 0,
+    category: categoryInput.toString(),
+    memo: memoInput.toString(),
     payees: payees
       .toString()
       .split(",")
@@ -52,10 +68,7 @@ export const action: ActionFunction = async ({ request }) => {
         return ele != undefined;
       }),
   };
-  insertTransaction({
-    pool_id: poolId.toString(),
-    transaction: newTransaction,
-  });
+  insertTransaction(newTransaction);
   // todo: validation: form validation
   return redirect("new");
 };

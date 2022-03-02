@@ -26,6 +26,8 @@ export const PayeeDataSchema = new mongoose.Schema<PayeeData>({
 })
 export interface Transaction {
   _id?: Types.ObjectId;
+  // pool_id is really only a virtual property for doing db actions, it is not saved to the Transaction subdocument in db.
+  pool_id: Types.ObjectId;
   transaction_date: Date;
   created_at: Date;
   total: number;
@@ -52,11 +54,6 @@ export const TransactionSchema = new Schema<Transaction>({
   memo: String,
   payees: [Schema.Types.Mixed],
 });
-
-export interface TransactionRequest {
-  pool_id: string;
-  transaction: Transaction;
-}
 
 export interface TransactionBucket {
   _id: Types.ObjectId;

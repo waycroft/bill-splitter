@@ -1,6 +1,6 @@
 import mongoose, { Schema, Types, model } from "mongoose";
-import type { Model } from "mongoose";
 import { LeanUser, LeanUserSchema } from "./UserSchema";
+import type { Model } from "mongoose";
 
 export interface SplitItem {
   _id: Types.ObjectId;

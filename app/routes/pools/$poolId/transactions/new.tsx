@@ -17,7 +17,7 @@ import mongoose, { isValidObjectId } from "mongoose";
 import { insertTransaction } from "~/utils/transactions.actions";
 
 import type { LoaderFunction, ActionFunction } from "remix";
-import type { Transaction } from '~/models/TransactionSchema';
+import type { Transaction } from "~/models/TransactionSchema";
 
 export const loader: LoaderFunction = async ({ params }) => {
   invariant(params.poolId, "Could not read $poolId in path params");
@@ -27,8 +27,9 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 export const action: ActionFunction = async ({ request }) => {
+  // todo: architecture: refactor out of this file into pools.actions?
   const formData = await request.formData();
-  console.log('formData', formData);
+  console.log("formData", formData);
   const {
     totalAmountInput,
     categoryInput,
@@ -61,7 +62,9 @@ export const action: ActionFunction = async ({ request }) => {
       .map((objIdInput: FormDataEntryValue) => {
         let objIdStr = objIdInput.toString();
         if (isValidObjectId(objIdStr)) {
-          return new mongoose.Types.ObjectId(objIdStr);
+          return {
+            _id: new mongoose.Types.ObjectId(objIdStr),
+          };
         }
       })
       .filter((ele) => {
@@ -203,7 +206,9 @@ export default function NewTransactionRoute() {
               }`}
               type="submit"
             >
-            {transition.state === 'submitting' ? 'Creating Transaction...' : 'Create Transaction'}
+              {transition.state === "submitting"
+                ? "Creating Transaction..."
+                : "Create Transaction"}
             </button>
           </fieldset>
         </Form>

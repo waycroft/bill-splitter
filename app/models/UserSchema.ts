@@ -1,16 +1,16 @@
-import mongoose, { Schema, ObjectId, model } from "mongoose";
+import mongoose, { Schema, Types, model } from "mongoose";
 import type { Model } from "mongoose";
 
 export interface User {
-  _id: ObjectId;
+  _id: Types.ObjectId;
   first_name: string;
   last_name: string;
   email: string;
   password: string;
   created_at: Date;
   last_login_at: Date;
-  pools: ObjectId[];
-  transactions: ObjectId[];
+  pools: Types.ObjectId[];
+  transactions: Types.ObjectId[];
   total_owed: number;
   total_owes: number;
 }

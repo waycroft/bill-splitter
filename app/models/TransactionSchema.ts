@@ -1,9 +1,9 @@
-import mongoose, { Schema, ObjectId, model } from "mongoose";
+import mongoose, { Schema, Types, model } from "mongoose";
 import type { Model } from "mongoose";
 import { LeanUser, LeanUserSchema } from "./UserSchema";
 
 export interface SplitItem {
-  _id: ObjectId;
+  _id: Types.ObjectId;
   name: string;
   amount: number;
   payees: LeanUser[]
@@ -15,7 +15,7 @@ export const SplitItemSchema = new mongoose.Schema<SplitItem>({
   payees: [LeanUserSchema]
 })
 export interface PayeeData {
-  _id: ObjectId;
+  _id: Types.ObjectId;
   total_amount: number;
   items: SplitItem[];
 }
@@ -25,11 +25,11 @@ export const PayeeDataSchema = new mongoose.Schema<PayeeData>({
   items: [SplitItemSchema]
 })
 export interface Transaction {
-  _id?: ObjectId;
+  _id?: Types.ObjectId;
   transaction_date: Date;
   created_at: Date;
   total: number;
-  owner: ObjectId;
+  owner: Types.ObjectId;
   owner_amount: number;
   category: string;
   memo: string;
@@ -59,8 +59,8 @@ export interface TransactionRequest {
 }
 
 export interface TransactionBucket {
-  _id: ObjectId;
-  pool_id: ObjectId;
+  _id: Types.ObjectId;
+  pool_id: Types.ObjectId;
   start_date: Date;
   end_date: Date;
   transactions: Transaction[];

@@ -1,4 +1,4 @@
-import mongoose, { Schema, ObjectId, model } from "mongoose";
+import mongoose, { Schema, Types, model } from "mongoose";
 import { TransactionSchema } from "./TransactionSchema";
 import { LeanUserSchema } from "./UserSchema";
 
@@ -6,7 +6,7 @@ import type { LeanUser } from "./UserSchema";
 import type { Model } from "mongoose";
 import type { Transaction } from "./TransactionSchema";
 export interface Pool {
-  _id: ObjectId;
+  _id: Types.ObjectId;
   settled_total: number;
   unsettled_total: number;
   members: LeanUser[];

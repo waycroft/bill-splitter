@@ -6,7 +6,6 @@ import type { Pool } from "~/models/PoolSchema";
 
 export const loader: LoaderFunction = async ({ params }) => {
   invariant(params.poolId, "pool id param is undefined");
-  console.log(params);
   return await getPool(params.poolId);
 };
 export default function PoolBody() {

@@ -50,6 +50,8 @@ export async function upsertPool(
 
 export async function deletePool(poolId: string) {
   invariant(isValidObjectId(poolId), "Pool ID was not a valid Object ID");
+  // todo: some hook that deletes corresponding transactions in buckets? 
+  // or maybe pools can never be fully deleted, but merely archived...?
   let writeOp = await PoolModel.deleteOne({ _id: poolId });
   return writeOp;
 }

@@ -1,16 +1,23 @@
 // todo: architecture: extract each step (label + input combo) into its own component,
 // and use a map/enum to switch them on/off. Maybe a prop for each that accepts
 // a map defined at the root of this route component that decides its hidden/shown status
-import { Form, redirect, useLoaderData, useSearchParams } from "remix";
+import {
+  Form,
+  redirect,
+  useLoaderData,
+  useSearchParams,
+  useTransition,
+} from "remix";
 import invariant from "tiny-invariant";
 import { getPool } from "~/utils/pool.actions";
 import CustomSplitItemList from "~/components/CustomSplitItemList";
 import { Pool } from "~/models/PoolSchema";
 import { LeanUser } from "~/models/UserSchema";
 import mongoose, { isValidObjectId } from "mongoose";
+import { insertTransaction } from "~/utils/transactions.actions";
 
 import type { LoaderFunction, ActionFunction } from "remix";
-import { insertTransaction } from "~/utils/transactions.actions";
+import type { Transaction } from '~/models/TransactionSchema';
 
 export const loader: LoaderFunction = async ({ params }) => {
   invariant(params.poolId, "Could not read $poolId in path params");
@@ -19,23 +26,16 @@ export const loader: LoaderFunction = async ({ params }) => {
   return pool;
 };
 
-interface RawTransactionInput {
-  totalAmountInput: number;
-  categoryInput: string;
-  memoInput: string;
-  owner: string;
-  payees: string;
-}
-
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
+  console.log('formData', formData);
   const {
     totalAmountInput,
     categoryInput,
     memoInput,
     owner,
     payees,
-    poolId,
+    pool_id,
     path,
   } = Object.fromEntries(formData);
   const memberCount =
@@ -44,8 +44,8 @@ export const action: ActionFunction = async ({ request }) => {
       .split(",")
       .filter((ele) => ele !== "").length + 1;
   // todo: architecture: should there be a Transaction class that I can construct so data transform happens automatically/in one place?
-  const newTransaction = {
-    pool_id: new mongoose.Types.ObjectId(poolId.toString()),
+  const newTransaction: Transaction = {
+    pool_id: new mongoose.Types.ObjectId(pool_id.toString()),
     // todo: feature: actually allow user input for transaction date
     transaction_date: new Date(),
     created_at: new Date(),
@@ -70,12 +70,14 @@ export const action: ActionFunction = async ({ request }) => {
   };
   insertTransaction(newTransaction);
   // todo: validation: form validation
-  return redirect("new");
+  // todo: bug: this redirect shows the stale version of the page
+  return redirect(`/pools/${pool_id}`);
 };
 
 export default function NewTransactionRoute() {
   const poolData: Pool = useLoaderData();
   const [searchParams] = useSearchParams();
+  const transition = useTransition();
   const step = Number(searchParams.get("step"));
   const isSplitEvenPath = searchParams.get("path") === "splitEvenly";
   const isFinalStep =
@@ -119,7 +121,7 @@ export default function NewTransactionRoute() {
             <input
               hidden
               readOnly
-              name="poolId"
+              name="pool_id"
               value={poolData._id.toString()}
             />
             {/* real input fields */}
@@ -201,7 +203,7 @@ export default function NewTransactionRoute() {
               }`}
               type="submit"
             >
-              Create Transaction
+            {transition.state === 'submitting' ? 'Creating Transaction...' : 'Create Transaction'}
             </button>
           </fieldset>
         </Form>

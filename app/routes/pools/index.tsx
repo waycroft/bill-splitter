@@ -65,7 +65,7 @@ export default function PoolsIndexRoute() {
                     <ul>
                       {pool.members.map((user: LeanUser) => {
                         return (
-                          <li>{user.first_name + " " + user.last_name}</li>
+                          <li key={user._id.toString()}>{user.first_name + " " + user.last_name}</li>
                         );
                       })}
                     </ul>

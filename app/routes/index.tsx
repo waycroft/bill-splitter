@@ -6,10 +6,10 @@ export default function Index() {
       <h1 className="text-3xl p-2">Bill Splitter</h1>
       <nav className='menu bg-primary w-56 p-2 rounded-box'>
         <ol>
-          <li>
+          <li key="pools">
             <Link to="pools">/pools</Link>
           </li>
-          <li>
+          <li key="users/search">
             <Link to="users/search">/users/search</Link>
           </li>
         </ol>

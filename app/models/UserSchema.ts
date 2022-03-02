@@ -1,5 +1,6 @@
 import mongoose, { Schema, Types, model } from "mongoose";
 import type { Model } from "mongoose";
+import type { Transaction } from "./TransactionSchema";
 
 export interface User {
   _id: Types.ObjectId;
@@ -13,6 +14,7 @@ export interface User {
   transactions: Types.ObjectId[];
   total_owed: number;
   total_owes: number;
+  current_transaction_input: Partial<Transaction>
 }
 
 export type LeanUser = Pick<User, "_id" | "first_name" | "last_name">;

@@ -36,6 +36,7 @@ export interface Transaction {
   category: string;
   memo: string;
   payees: PayeeData[];
+  split_evenly?: boolean;
 }
 
 export const TransactionSchema = new Schema<Transaction>({

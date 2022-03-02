@@ -1,7 +1,19 @@
+import { LoaderFunction, useLoaderData } from "remix";
+import invariant from "tiny-invariant";
+import { getPool } from "~/utils/pool.actions";
+
+import type { Pool } from "~/models/PoolSchema";
+
+export const loader: LoaderFunction = async ({ params }) => {
+  invariant(params.poolId, "pool id param is undefined");
+  console.log(params);
+  return await getPool(params.poolId);
+};
 export default function PoolBody() {
-    return(
-        <div>
-            (pool transaction data)
-        </div>
-    )
+  const poolData = useLoaderData<Pool>();
+  return (
+    <div>
+      <p>{JSON.stringify(poolData.transactions, null, '\t')}</p>
+    </div>
+  );
 }

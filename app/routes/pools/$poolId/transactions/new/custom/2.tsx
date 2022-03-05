@@ -22,7 +22,6 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  console.log(request);
   const formData = await request.formData();
   const { poolData, currentUserData, categoryInput, memoInput } =
     Object.fromEntries(formData);

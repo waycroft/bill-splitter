@@ -5,8 +5,6 @@ import { Pool } from "~/models/PoolSchema";
 import XButton from "./XButton";
 
 interface Props {
-  id: string;
-  name: string;
   poolData: Pool;
 }
 

@@ -10,8 +10,8 @@ import { getUser, updateTransactionInProgress } from "~/utils/user.actions";
 import type { LoaderFunction, ActionFunction } from "remix";
 import type { TransactionInProgress } from "~/models/TransactionSchema";
 export interface LoaderDataShape {
-  pool: Pool;
-  currentUser: User;
+  poolData: Pool;
+  currentUserData: User;
 }
 
 export const loader: LoaderFunction = async ({ params }) => {
@@ -62,13 +62,13 @@ export default function NewTransactionIndexRoute() {
           readOnly
           hidden
           name="poolData"
-          value={JSON.stringify(loaderData.pool)}
+          value={JSON.stringify(loaderData.poolData)}
         />
         <input
           readOnly
           hidden
           name="currentUserData"
-          value={JSON.stringify(loaderData.currentUser)}
+          value={JSON.stringify(loaderData.currentUserData)}
         />
         <label htmlFor="totalAmountInput">Total amount?</label>
         <input

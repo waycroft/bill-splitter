@@ -11,6 +11,7 @@ import { getUser, updateTransactionInProgress } from "~/utils/user.actions";
 
 import type { LoaderFunction, ActionFunction } from "remix";
 import type { LoaderDataShape } from "./index";
+import LoaderDataHiddenInput from "~/components/util/LoaderDataHiddenInput";
 
 export const loader: LoaderFunction = async ({ params }) => {
   invariant(params.poolId, "Could not read $poolId in path params");
@@ -73,18 +74,7 @@ export default function SplitEvenlyStep2() {
   return (
     <div>
       <Form method="post">
-        <input
-          readOnly
-          hidden
-          name="poolData"
-          value={JSON.stringify(loaderData.pool)}
-        />
-        <input
-          readOnly
-          hidden
-          name="currentUserData"
-          value={JSON.stringify(loaderData.currentUser)}
-        />
+        <LoaderDataHiddenInput loaderData={loaderData} />
         <label htmlFor="categoryInput">Category / Memo</label>
         {/* todo: feature: this will be a single-select. data loaded from categories stored in poolData */}
         <input

@@ -9,6 +9,7 @@ import { User } from "~/models/UserSchema";
 import { getUser, updateTransactionInProgress } from "~/utils/user.actions";
 import type { LoaderFunction, ActionFunction } from "remix";
 import type { TransactionInProgress } from "~/models/TransactionSchema";
+import LoaderDataHiddenInput from "~/components/util/LoaderDataHiddenInput";
 
 export interface LoaderDataShape {
   poolData: Pool;
@@ -59,18 +60,7 @@ export default function NewTransactionIndexRoute() {
   return (
     <div>
       <Form method="post">
-        <input
-          readOnly
-          hidden
-          name="poolData"
-          value={JSON.stringify(loaderData.poolData)}
-        />
-        <input
-          readOnly
-          hidden
-          name="currentUserData"
-          value={JSON.stringify(loaderData.currentUserData)}
-        />
+        <LoaderDataHiddenInput loaderData={loaderData} />
         <label htmlFor="totalAmountInput">Total amount?</label>
         <input
           name="totalAmountInput"

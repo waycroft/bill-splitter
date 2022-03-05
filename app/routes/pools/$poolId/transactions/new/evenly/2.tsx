@@ -1,15 +1,8 @@
 // todo: architecture: extract each step (label + input combo) into its own component,
 // and use a map/enum to switch them on/off. Maybe a prop for each that accepts
 // a map defined at the root of this route component that decides its hidden/shown status
-import {
-  Form,
-  redirect,
-  useLoaderData,
-  useMatches,
-  useSearchParams,
-  useTransition,
-} from "remix";
 import invariant from "tiny-invariant";
+import { Form, redirect, useLoaderData, useTransition } from "remix";
 import { getPool } from "~/utils/pool.actions";
 import { Pool } from "~/models/PoolSchema";
 import { LeanUser, User } from "~/models/UserSchema";
@@ -17,7 +10,6 @@ import { insertTransaction } from "~/utils/transactions.actions";
 import { getUser, updateTransactionInProgress } from "~/utils/user.actions";
 
 import type { LoaderFunction, ActionFunction } from "remix";
-import type { Transaction } from "~/models/TransactionSchema";
 import type { LoaderData } from "../index";
 
 export const loader: LoaderFunction = async ({ params }) => {

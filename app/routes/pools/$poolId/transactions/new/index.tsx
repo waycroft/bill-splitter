@@ -45,7 +45,7 @@ export const action: ActionFunction = async ({ request }) => {
     default:
       transactionInProgress = {
         step: 2,
-        split_evenly: true,
+        split_evenly: false,
         total: Number(totalAmountInput),
         pool_id: pool._id,
       };

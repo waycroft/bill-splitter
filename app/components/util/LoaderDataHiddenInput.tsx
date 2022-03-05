@@ -1,7 +1,6 @@
 export default function ({ loaderData }: { loaderData: any}) {
   let res = [];
   for (const [key, val] of Object.entries(loaderData)) {
-    console.log('key:', key, 'val:', val);
     const ele = (
       <input
         readOnly
@@ -13,7 +12,6 @@ export default function ({ loaderData }: { loaderData: any}) {
     );
     res.push(ele);
   }
-  console.log('res:', res);
   return (
     <div>
       {res}

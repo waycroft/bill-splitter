@@ -39,7 +39,6 @@ export default function NewPoolRoute() {
               return (
                 <li key={user._id.toString()}>
                   <button onClick={e => {
-                    console.log(e);
                     // todo: bug: clicking a selected user doesn't remove them
                   }}>
                     <Chip

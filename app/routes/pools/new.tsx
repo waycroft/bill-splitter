@@ -38,9 +38,11 @@ export default function NewPoolRoute() {
             {selectedUsers.map((user: LeanUser) => {
               return (
                 <li key={user._id.toString()}>
-                  <button onClick={e => {
-                    // todo: bug: clicking a selected user doesn't remove them
-                  }}>
+                  <button
+                    onClick={(e) => {
+                      // todo: bug: clicking a selected user doesn't remove them
+                    }}
+                  >
                     <Chip
                       displayText={user.first_name + " " + user.last_name}
                     />

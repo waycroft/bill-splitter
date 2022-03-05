@@ -18,7 +18,7 @@ export default function PoolRoute() {
       <div className="avatar-group">
         {data.members.map((member: LeanUser) => {
           return (
-            <div className="avatar placeholder" id={member._id.toString()}>
+            <div className="avatar placeholder" id={member._id.toString()} key={member._id.toString()}>
               <div className="w-12 bg-base-200">
                 {/* todo: accessibility: use actual ul element for no-js/accessibility */}
                 <span>{member.first_name[0] + member.last_name[0]}</span>

@@ -6,6 +6,7 @@ export default function ({ loaderData }: { loaderData: any}) {
         readOnly
         hidden
         type="text"
+        key={key.toString()}
         name={key.toString()}
         value={JSON.stringify(val)}
       />

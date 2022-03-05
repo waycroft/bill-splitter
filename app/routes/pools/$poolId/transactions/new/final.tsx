@@ -10,7 +10,7 @@ import { insertTransaction } from "~/utils/transactions.actions";
 import { getUser, updateTransactionInProgress } from "~/utils/user.actions";
 
 import type { LoaderFunction, ActionFunction } from "remix";
-import type { LoaderData } from "../index";
+import type { LoaderDataShape } from "./index";
 
 export const loader: LoaderFunction = async ({ params }) => {
   invariant(params.poolId, "Could not read $poolId in path params");
@@ -68,7 +68,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function SplitEvenlyStep2() {
-  const loaderData = useLoaderData<LoaderData>();
+  const loaderData = useLoaderData<LoaderDataShape>();
   const transition = useTransition();
   return (
     <div>

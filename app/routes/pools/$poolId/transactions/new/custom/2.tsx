@@ -5,12 +5,11 @@ import invariant from "tiny-invariant";
 import { Form, redirect, useLoaderData, useTransition } from "remix";
 import { getPool } from "~/utils/pool.actions";
 import { Pool } from "~/models/PoolSchema";
-import { LeanUser, User } from "~/models/UserSchema";
-import { insertTransaction } from "~/utils/transactions.actions";
-import { getUser, updateTransactionInProgress } from "~/utils/user.actions";
+import { User } from "~/models/UserSchema";
+import { getUser } from "~/utils/user.actions";
 
 import type { LoaderFunction, ActionFunction } from "remix";
-import type { LoaderData } from "../index";
+import type { LoaderDataShape } from "../index";
 
 export const loader: LoaderFunction = async ({ params }) => {
   invariant(params.poolId, "Could not read $poolId in path params");
@@ -22,53 +21,17 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 export const action: ActionFunction = async ({ request }) => {
+  console.log(request);
   const formData = await request.formData();
-  const { poolData, currentUserData, categoryInput, memoInput } =
-    Object.fromEntries(formData);
+  const { poolData, currentUserData } = Object.fromEntries(formData);
   const currentUser: User = JSON.parse(currentUserData.toString());
   const pool: Pool = JSON.parse(poolData.toString());
   invariant(currentUser, "currentUser is undefined/null");
-  invariant(
-    currentUser.transaction_in_progress &&
-      currentUser.transaction_in_progress.total &&
-      currentUser.transaction_in_progress.split_evenly,
-    "currentUser's transactionInProgress is undefined or malformed"
-  );
-  delete currentUser.transaction_in_progress.step;
-  await insertTransaction({
-    pool_id: pool._id,
-    split_evenly: currentUser.transaction_in_progress.split_evenly,
-    total: currentUser.transaction_in_progress.total,
-    transaction_date: new Date(),
-    created_at: new Date(),
-    owner: currentUser._id,
-    owner_amount:
-      currentUser.transaction_in_progress.total / pool.members.length,
-    category: categoryInput.toString(),
-    memo: memoInput.toString(),
-    payees: pool.members
-      .filter((user: LeanUser) => {
-        user._id !== currentUser._id;
-      })
-      .map((user: LeanUser) => {
-        invariant(
-          currentUser.transaction_in_progress.total,
-          "transaction_in_progress.total is undefined/null"
-        );
-        return {
-          _id: user._id,
-          total_amount:
-            currentUser.transaction_in_progress.total / pool.members.length,
-          items: [],
-        };
-      }),
-  });
-  updateTransactionInProgress(currentUser._id, {});
   return redirect(`/pools/${pool._id}`);
 };
 
 export default function SplitEvenlyStep2() {
-  const loaderData = useLoaderData<LoaderData>();
+  const loaderData = useLoaderData<LoaderDataShape>();
   const transition = useTransition();
   return (
     <div>

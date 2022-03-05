@@ -9,7 +9,7 @@ import { User } from "~/models/UserSchema";
 import { getUser, updateTransactionInProgress } from "~/utils/user.actions";
 import type { LoaderFunction, ActionFunction } from "remix";
 import type { TransactionInProgress } from "~/models/TransactionSchema";
-export interface LoaderData {
+export interface LoaderDataShape {
   pool: Pool;
   currentUser: User;
 }
@@ -39,7 +39,7 @@ export const action: ActionFunction = async ({ request }) => {
         pool_id: pool._id,
       };
       await updateTransactionInProgress(currentUser._id, transactionInProgress);
-      return redirect(`${request.url}/evenly/2`);
+      return redirect(`${request.url}/final`);
     default:
       transactionInProgress = {
         step: 2,
@@ -53,7 +53,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function NewTransactionIndexRoute() {
-  const loaderData = useLoaderData<LoaderData>();
+  const loaderData = useLoaderData<LoaderDataShape>();
   const transition = useTransition();
   return (
     <div>

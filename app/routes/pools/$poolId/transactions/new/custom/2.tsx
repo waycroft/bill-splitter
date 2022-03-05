@@ -10,6 +10,8 @@ import { getUser } from "~/utils/user.actions";
 
 import type { LoaderFunction, ActionFunction } from "remix";
 import type { LoaderDataShape } from "../index";
+import LoaderDataHiddenInput from "~/components/util/LoaderDataHiddenInput";
+import CustomSplitItemList from "~/components/CustomSplitItemList";
 
 export const loader: LoaderFunction = async ({ params }) => {
   invariant(params.poolId, "Could not read $poolId in path params");
@@ -17,11 +19,10 @@ export const loader: LoaderFunction = async ({ params }) => {
   const currentUser = await getUser("6200824a07f36f60231a5377");
   invariant(pool, "getPool came back null");
   invariant(currentUser, "getUser came back null");
-  return { pool: pool, currentUser: currentUser };
+  return { poolData: pool, currentUserData: currentUser };
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  console.log(request);
   const formData = await request.formData();
   const { poolData, currentUserData } = Object.fromEntries(formData);
   const currentUser: User = JSON.parse(currentUserData.toString());
@@ -30,48 +31,18 @@ export const action: ActionFunction = async ({ request }) => {
   return redirect(`/pools/${pool._id}`);
 };
 
-export default function SplitEvenlyStep2() {
+export default function CustomSplitStep2() {
   const loaderData = useLoaderData<LoaderDataShape>();
   const transition = useTransition();
   return (
     <div>
       <Form method="post">
-        <input
-          readOnly
-          hidden
-          name="poolData"
-          value={JSON.stringify(loaderData.pool)}
-        />
-        <input
-          readOnly
-          hidden
-          name="currentUserData"
-          value={JSON.stringify(loaderData.currentUser)}
-        />
+        {/* todo: refactor: is it possible to pass a type param to loaderData here? */}
+        <LoaderDataHiddenInput loaderData={loaderData} />
         <label htmlFor="categoryInput">Category / Memo</label>
-        {/* todo: feature: this will be a single-select. data loaded from categories stored in poolData */}
-        <input
-          name="categoryInput"
-          type="text"
-          id="categoryInput"
-          placeholder="Enter category here"
-          className="input"
-        />
-        <input
-          name="memoInput"
-          type="text"
-          id="memoInput"
-          placeholder="Enter memo here"
-          className="input"
-        />
-        <button
-          name="createTransaction"
-          className={`btn btn-primary rounded-md`}
-          type="submit"
-        >
-          {transition.state === "submitting"
-            ? "Creating..."
-            : "Create Transaction"}
+        <CustomSplitItemList poolData={loaderData.poolData} />
+        <button type="submit" className={`btn btn-secondary rounded-md`}>
+          {transition.state === "submitting" ? "Nexting..." : "Next 👉"}
         </button>
       </Form>
     </div>

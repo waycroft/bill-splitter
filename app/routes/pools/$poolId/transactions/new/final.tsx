@@ -19,7 +19,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   const currentUser = await getUser("6200824a07f36f60231a5377");
   invariant(pool, "getPool came back null");
   invariant(currentUser, "getUser came back null");
-  return { pool: pool, currentUser: currentUser };
+  return { poolData: pool, currentUserData: currentUser };
 };
 
 export const action: ActionFunction = async ({ request }) => {

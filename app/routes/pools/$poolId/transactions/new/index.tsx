@@ -9,6 +9,7 @@ import { User } from "~/models/UserSchema";
 import { getUser, updateTransactionInProgress } from "~/utils/user.actions";
 import type { LoaderFunction, ActionFunction } from "remix";
 import type { TransactionInProgress } from "~/models/TransactionSchema";
+
 export interface LoaderDataShape {
   poolData: Pool;
   currentUserData: User;

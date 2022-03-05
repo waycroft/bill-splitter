@@ -34,7 +34,7 @@ const reducer = (state: CustomSplitItemData[], action: ReducerAction) => {
   }
 };
 
-export default function ({ id, name, poolData }: Props) {
+export default function ({ poolData }: Props) {
   const members = poolData.members;
   const initial: CustomSplitItemData[] = [
     {

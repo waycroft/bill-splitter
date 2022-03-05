@@ -77,6 +77,7 @@ export default function NewTransactionIndexRoute() {
           id="totalAmountInput"
           placeholder="420"
           className="input"
+          step={0.01}
         />
         <label htmlFor="isSplitEvenly">Splitting evenly?</label>
         <input

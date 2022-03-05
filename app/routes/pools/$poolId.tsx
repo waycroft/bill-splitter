@@ -8,22 +8,17 @@ import type { LoaderFunction } from "remix";
 
 export let loader: LoaderFunction = async ({ params }) => {
   invariant(params.poolId, "No pool ID");
-  return json(await getPool(params.poolId));
+  return await getPool(params.poolId);
 };
 
-export type ContextType = {
-  members: LeanUser[];
-}
-
 export default function PoolRoute() {
-  const data: Pool = useLoaderData<Pool>();
-  const context: ContextType = { members: data.members };
+  const data = useLoaderData<Pool>();
   return (
     <div className="container mx-auto">
       <div className="avatar-group">
         {data.members.map((member: LeanUser) => {
           return (
-            <div className="avatar placeholder">
+            <div className="avatar placeholder" id={member._id.toString()}>
               <div className="w-12 bg-base-200">
                 {/* todo: accessibility: use actual ul element for no-js/accessibility */}
                 <span>{member.first_name[0] + member.last_name[0]}</span>
@@ -32,11 +27,11 @@ export default function PoolRoute() {
           );
         })}
       </div>
-      <Link to={`transactions/new?step=1&path=splitEvenly`}>
+      <Link to={`transactions/new`}>
         <button className="btn">Add transaction</button>
       </Link>
       <div>
-        <Outlet context={context}/>
+        <Outlet />
       </div>
     </div>
   );

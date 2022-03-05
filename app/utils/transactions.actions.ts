@@ -46,3 +46,5 @@ async function addTransactionToBucket(transaction: Transaction) {
     return await newBucket.save();
   }
 }
+
+// todo: feature: update user transactions fields

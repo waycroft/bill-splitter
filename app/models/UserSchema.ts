@@ -1,6 +1,6 @@
 import mongoose, { Schema, Types, model } from "mongoose";
 import type { Model } from "mongoose";
-import type { Transaction } from "./TransactionSchema";
+import type { TransactionInProgress } from "./TransactionSchema";
 
 export interface User {
   _id: Types.ObjectId;
@@ -14,7 +14,7 @@ export interface User {
   transactions: Types.ObjectId[];
   total_owed: number;
   total_owes: number;
-  current_transaction_input: Partial<Transaction>
+  transaction_in_progress: TransactionInProgress
 }
 
 export type LeanUser = Pick<User, "_id" | "first_name" | "last_name">;
@@ -41,6 +41,7 @@ const UserSchema = new Schema<User>({
   transactions: [Schema.Types.ObjectId],
   total_owed: Number,
   total_owes: Number,
+  transaction_in_progress: Schema.Types.Mixed
 });
 
 export const UserModel: Model<User> =

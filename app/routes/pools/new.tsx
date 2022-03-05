@@ -6,6 +6,7 @@ import invariant from "tiny-invariant";
 import { LeanUser } from "~/models/UserSchema";
 
 import type { ActionFunction } from "remix";
+import SearchButton from "~/components/SearchButton";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -23,9 +24,8 @@ export const action: ActionFunction = async ({ request }) => {
 export default function NewPoolRoute() {
   const [selectedUsers, setSelectedUsers] = useState<LeanUser[]>([]);
   const transition = useTransition();
-
   return (
-    <div className='container mx-auto'>
+    <div className="container mx-auto">
       <div>
         <UserSearch
           currentResults={selectedUsers}
@@ -38,7 +38,14 @@ export default function NewPoolRoute() {
             {selectedUsers.map((user: LeanUser) => {
               return (
                 <li key={user._id.toString()}>
-                  <Chip displayText={user.first_name + " " + user.last_name} />
+                  <button onClick={e => {
+                    console.log(e);
+                    // todo: bug: clicking a selected user doesn't remove them
+                  }}>
+                    <Chip
+                      displayText={user.first_name + " " + user.last_name}
+                    />
+                  </button>
                 </li>
               );
             })}
@@ -82,7 +89,6 @@ interface Props {
 
 function UserSearch({ currentResults, addResult }: Props) {
   const fetcher = useFetcher();
-
   return (
     <div>
       <fetcher.Form method="post" action="/users/search">
@@ -96,20 +102,7 @@ function UserSearch({ currentResults, addResult }: Props) {
             name="q"
           ></input>
           <button className="btn btn-primary dropdown" type="submit">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M8 16l2.879-2.879m0 0a3 3 0 104.243-4.242 3 3 0 00-4.243 4.242zM21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+            <SearchButton />
           </button>
           {fetcher.type === "done" ? (
             <ul

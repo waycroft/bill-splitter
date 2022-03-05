@@ -3,7 +3,7 @@ import { LeanUser, LeanUserSchema } from "./UserSchema";
 import type { Model } from "mongoose";
 
 export interface SplitItem {
-  _id: Types.ObjectId;
+  _id?: Types.ObjectId;
   name: string;
   amount: number;
   payees: LeanUser[]
@@ -15,7 +15,7 @@ export const SplitItemSchema = new mongoose.Schema<SplitItem>({
   payees: [LeanUserSchema]
 })
 export interface PayeeData {
-  _id: Types.ObjectId;
+  _id?: Types.ObjectId;
   total_amount: number;
   items: SplitItem[];
 }
@@ -36,8 +36,10 @@ export interface Transaction {
   category: string;
   memo: string;
   payees: PayeeData[];
-  split_evenly?: boolean;
+  split_evenly: boolean;
 }
+
+export type TransactionInProgress = Partial<Transaction> & { step?: number };
 
 export const TransactionSchema = new Schema<Transaction>({
   created_at: {

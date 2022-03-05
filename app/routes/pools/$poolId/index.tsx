@@ -8,6 +8,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   invariant(params.poolId, "pool id param is undefined");
   return await getPool(params.poolId);
 };
+
 export default function PoolBody() {
   const poolData = useLoaderData<Pool>();
   return (

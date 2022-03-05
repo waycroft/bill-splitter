@@ -1,11 +1,13 @@
 import { useReducer } from "react";
-import { useOutletContext } from "remix";
 import { LeanUser } from "~/models/UserSchema";
-import { ContextType } from "~/routes/pools/$poolId";
 import { v4 as uuidv4 } from "uuid";
+import { Pool } from "~/models/PoolSchema";
+import XButton from "./XButton";
+
 interface Props {
   id: string;
   name: string;
+  poolData: Pool;
 }
 
 interface CustomSplitItemData {
@@ -32,8 +34,8 @@ const reducer = (state: CustomSplitItemData[], action: ReducerAction) => {
   }
 };
 
-export default function ({ id, name }: Props) {
-  const { members } = useOutletContext<ContextType>();
+export default function ({ id, name, poolData }: Props) {
+  const members = poolData.members;
   const initial: CustomSplitItemData[] = [
     {
       id: uuidv4(),
@@ -62,20 +64,7 @@ export default function ({ id, name }: Props) {
                   dispatch({ type: "REMOVE", itemToRemoveId: item.id })
                 }
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+              <XButton />
               </button>
             </div>
           );
@@ -119,7 +108,9 @@ function CustomSplitItem({ id, itemName, value, payees }: CustomSplitItemData) {
       >
         {payees.map((payee: LeanUser) => {
           return (
-            <option value={payee._id.toString()}>{payee.first_name}</option>
+            <option value={payee._id.toString()}>
+              {payee.first_name + " " + payee.last_name[0]}
+            </option>
           );
         })}
       </select>

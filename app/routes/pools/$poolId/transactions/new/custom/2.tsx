@@ -40,12 +40,19 @@ const reducer = (state: CustomSplitItemData[], action: ReducerAction) => {
   switch (action.type) {
     case "ADD":
       return state.concat(action.payload);
+    case "UPDATE":
+      for (let i = 0; i < state.length; i++) {
+        if (state[i].id === action.target) {
+          state[i] = action.payload;
+        }
+      }
+      // interesting quirk of useReducer: It uses Object.is() algorithm to determine if the returned value here is equivalent to the prev state. If it is, it WILL NOT re-render the component, and will return stale state.
+      // So the workaround is to duplicate the state to force return a new object in memory, which is how Object.is() determines if items are equivalent or not.
+      return [...state];
     case "REMOVE":
       return state.filter((item) => {
         return item.id !== action.itemToRemoveId;
       });
-    case "UPDATE":
-      return state;
     default:
       throw new Error("Missing/bad reducer action");
   }
@@ -57,35 +64,26 @@ export default function CustomSplitStep2() {
   const initial: CustomSplitItemData[] = [
     {
       id: uuidv4(),
-      itemName: "garlic fries",
+      name: "garlic fries",
       amount: 0,
       payees: loaderData.poolData.members,
     },
   ];
-  function changeHandler(e: React.ChangeEvent<HTMLInputElement>) {
-    console.log("changed: ", e);
-    // possible to just input.get the values of all the inputs instead 
-    // of messing around with switch-ing the target of the input?
-    // dispatch({
-    //   type: "UPDATE",
-    //   payload: e.target.value,
-    // });
-  }
   const [state, dispatch] = useReducer(reducer, initial);
   return (
     <div>
       <h1>Custom Split</h1>
-      {/* these inputs are not submitted with the form, but rather are passed to the hidden inputs below in the <Form> which actually submit the state */}
       <div>
+        {/* these inputs are not submitted with the form, but rather are passed to the hidden inputs below in the <Form> which actually submit the state */}
         {state.map((item) => {
           return (
             <div key={item.id}>
               <CustomSplitItem
                 id={item.id}
-                itemName={item.itemName}
+                name={item.name}
                 amount={item.amount}
                 payees={item.payees}
-                changeHandler={debounce(changeHandler, 1000)}
+                dispatch={dispatch}
               />
               <button
                 className="btn btn-primary rounded-full gap-1"
@@ -108,7 +106,7 @@ export default function CustomSplitStep2() {
               payload: {
                 id: uuidv4(),
                 // todo: fun: random name each new item
-                itemName: "mocha matcha",
+                name: "mocha matcha",
                 amount: 0,
                 payees: loaderData.poolData.members,
               },

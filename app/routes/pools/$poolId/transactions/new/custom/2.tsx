@@ -8,13 +8,19 @@ import { User } from "~/models/UserSchema";
 import { getUser } from "~/utils/user.actions";
 import LoaderDataHiddenInput from "~/components/util/LoaderDataHiddenInput";
 import CustomSplitItem from "~/components/CustomSplitItem";
-import { debounce } from "lodash";
 import XButton from "~/components/XButton";
+import { updateTransactionInProgress } from "~/utils/user.actions";
+import { isValidObjectId, Types } from "mongoose";
 
 import type { LoaderFunction, ActionFunction } from "remix";
 import type { LoaderDataShape } from "../index";
 import type { CustomSplitItemData } from "~/components/CustomSplitItem";
 import type { ReducerAction } from "~/components/CustomSplitItem";
+import type {
+  PayeeData,
+  SplitItem,
+  TransactionInProgress,
+} from "~/models/TransactionSchema";
 
 export const loader: LoaderFunction = async ({ params }) => {
   invariant(params.poolId, "Could not read $poolId in path params");
@@ -28,13 +34,59 @@ export const loader: LoaderFunction = async ({ params }) => {
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const { poolData, currentUserData } = Object.fromEntries(formData);
-  console.log(formData);
-  const currentUser: User = JSON.parse(currentUserData.toString());
   const pool: Pool = JSON.parse(poolData.toString());
-  invariant(currentUser, "currentUser is undefined/null");
+  const currentUser: User = JSON.parse(currentUserData.toString());
   invariant(pool, "pool is undefined/null");
-  return redirect(`/pools/${pool._id}`);
+  invariant(currentUser, "currentUser is undefined/null");
+  try {
+    let splitItems: CustomSplitItemData[] = [];
+    for (const item of formData.getAll("splitItemsData")) {
+      splitItems.push(JSON.parse(item.toString()));
+    }
+    const transactionInProgress: TransactionInProgress = {
+      step: 3,
+      payees: processPayeeData(splitItems),
+    };
+    await updateTransactionInProgress(currentUser._id, transactionInProgress);
+    return redirect(`/pools/${pool._id}/transactions/new/final`);
+  } catch (error) {
+    console.error(error);
+  }
 };
+
+/**
+ * Takes the incoming custom split item formData and shapes it so it fits the Transaction schema.
+ * @param customSplitItems The custom split items coming from the form data
+ * @returns {PayeeData[]} An array of PayeeData for the eventual Transaction document
+ */
+function processPayeeData(
+  customSplitItems: CustomSplitItemData[]
+): PayeeData[] {
+  let hash: { [_id: string]: { total_amount: number; items: SplitItem[] } } =
+    {};
+  for (const item of customSplitItems) {
+    // todo: refactor: no nested loops! Maybe worth re-configuring the input data so it's closer to the necessary shape
+    for (const payee of item.payees) {
+      const _id = payee._id.toString();
+      if (!isValidObjectId(_id))
+        throw "invalid Object ID passed to processPayeeData";
+      if (!hash[_id]) {
+        hash[_id] = { total_amount: 0, items: [] };
+      }
+      hash[_id].total_amount += item.amount / item.payees.length;
+      hash[_id].items.push({ name: item.name, amount: item.amount });
+    }
+  }
+  let res: PayeeData[] = [];
+  for (const [key, val] of Object.entries(hash)) {
+    res.push({
+      _id: new Types.ObjectId(key),
+      total_amount: val.total_amount,
+      items: val.items,
+    });
+  }
+  return res;
+}
 
 const reducer = (state: CustomSplitItemData[], action: ReducerAction) => {
   switch (action.type) {
@@ -128,7 +180,7 @@ export default function CustomSplitStep2() {
                 hidden
                 readOnly
                 type="text"
-                name="splitItems"
+                name="splitItemsData"
                 value={JSON.stringify(splitItem)}
               />
             </fieldset>

@@ -14,6 +14,7 @@ export type ReducerAction =
 export interface CustomSplitItemData extends SplitItem {
   id: string;
   dispatch?: any;
+  payees: LeanUser[];
 }
 
 export default function ({

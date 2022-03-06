@@ -6,13 +6,11 @@ export interface SplitItem {
   _id?: Types.ObjectId;
   name: string;
   amount: number;
-  payees: LeanUser[]
 }
 
 export const SplitItemSchema = new mongoose.Schema<SplitItem>({
   name: String,
   amount: Number,
-  payees: [LeanUserSchema]
 })
 export interface PayeeData {
   _id?: Types.ObjectId;

@@ -15,12 +15,12 @@ import { isValidObjectId, Types } from "mongoose";
 import type { LoaderFunction, ActionFunction } from "remix";
 import type { LoaderDataShape } from "../index";
 import type { CustomSplitItemData } from "~/components/CustomSplitItem";
-import type { ReducerAction } from "~/components/CustomSplitItem";
 import type {
   PayeeData,
   SplitItem,
   TransactionInProgress,
 } from "~/models/TransactionSchema";
+import { LeanUser } from "~/models/UserSchema";
 
 export const loader: LoaderFunction = async ({ params }) => {
   invariant(params.poolId, "Could not read $poolId in path params");
@@ -88,10 +88,25 @@ function processPayeeData(
   return res;
 }
 
+export type ReducerAction =
+  | { type: "ADD"; payload: { payees: LeanUser[] } }
+  | { type: "REMOVE"; itemToRemoveId: string }
+  | {
+      type: "UPDATE";
+      target: string;
+      payload: CustomSplitItemData;
+    };
+
 const reducer = (state: CustomSplitItemData[], action: ReducerAction) => {
   switch (action.type) {
     case "ADD":
-      return state.concat(action.payload);
+      return state.concat({
+        id: uuidv4(),
+        // todo: fun: random name each new item
+        name: "",
+        amount: 0,
+        payees: action.payload.payees,
+      });
     case "UPDATE":
       for (let i = 0; i < state.length; i++) {
         if (state[i].id === action.target) {
@@ -116,7 +131,7 @@ export default function CustomSplitStep2() {
   const initial: CustomSplitItemData[] = [
     {
       id: uuidv4(),
-      name: "garlic fries",
+      name: "",
       amount: 0,
       payees: loaderData.poolData.members,
     },
@@ -156,12 +171,8 @@ export default function CustomSplitStep2() {
             dispatch({
               type: "ADD",
               payload: {
-                id: uuidv4(),
-                // todo: fun: random name each new item
-                name: "mocha matcha",
-                amount: 0,
-                payees: loaderData.poolData.members,
-              },
+                payees: loaderData.poolData.members
+              }
             })
           }
           className="btn btn-accent rounded"

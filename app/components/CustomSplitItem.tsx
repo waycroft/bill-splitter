@@ -1,20 +1,15 @@
-import { LeanUser } from "~/models/UserSchema";
 import { useEffect, useState } from "react";
+import { LeanUser } from "~/models/UserSchema";
 import { SplitItem } from "~/models/TransactionSchema";
-
-export type ReducerAction =
-  | { type: "ADD"; payload: CustomSplitItemData }
-  | { type: "REMOVE"; itemToRemoveId: string }
-  | {
-      type: "UPDATE";
-      target: string;
-      payload: CustomSplitItemData;
-    };
 
 export interface CustomSplitItemData extends SplitItem {
   id: string;
   dispatch?: any;
   payees: LeanUser[];
+}
+
+interface PayeeSelectStatus {
+  [_id: string]: boolean;
 }
 
 export default function ({
@@ -26,7 +21,13 @@ export default function ({
 }: CustomSplitItemData) {
   const [nameState, setNameState] = useState(name);
   const [amountState, setAmountState] = useState(amount);
-  const [payeeState, setPayeeState] = useState(payees);
+  const initSelectedPayees: PayeeSelectStatus = Object.fromEntries(
+    payees.map((payee: LeanUser) => {
+      return [payee._id.toString(), false];
+    })
+  )
+  const [payeeSelectedState, setPayeeSelectedState] =
+    useState<PayeeSelectStatus>(initSelectedPayees);
   // todo: optimization: debounce instead of useEffect
   useEffect(() => {
     dispatch({
@@ -36,14 +37,23 @@ export default function ({
         id: id,
         name: nameState,
         amount: amountState,
-        payees: payeeState,
+        payees: payees,
+        selectedPayees: payeeSelectedState,
       },
     });
-  }, [nameState, amountState, payeeState]);
+  }, [nameState, amountState, payeeSelectedState]);
+  function handlePayeeSelect(e) {
+    setPayeeSelectedState((prevState) => {
+      prevState[e.target.value] = !prevState[e.target.value];
+      return {...prevState};
+    });
+  }
   return (
     <div>
       <fieldset>
-        <label htmlFor="nameInput" className="label">Item name</label>
+        <label htmlFor="nameInput" className="label">
+          Item name
+        </label>
         <input
           type="text"
           id="nameInput"
@@ -51,7 +61,9 @@ export default function ({
           className="input"
           onChange={(e) => setNameState(e.target.value)}
         />
-        <label htmlFor="amountInput" className="label">Amount</label>
+        <label htmlFor="amountInput" className="label">
+          Amount
+        </label>
         <input
           type="number"
           id="amountInput"
@@ -61,9 +73,10 @@ export default function ({
           onChange={(e) => setAmountState(Number(e.target.value))}
         />
         {/* todo: validation: should not be able to select all payees */}
+        {/* todo: feature: use "me" as an option, and make it the first option */}
         <div className="form-control">
           <label className="label cursor-pointer">Payees:</label>
-          {payeeState.map((payee: LeanUser) => {
+          {payees.map((payee: LeanUser) => {
             return (
               <div key={payee._id.toString()}>
                 <span className="label-text">
@@ -75,7 +88,8 @@ export default function ({
                   name="payeesInput"
                   className="checkbox"
                   value={payee._id.toString()}
-                  onChange={(e) => console.log(e.target.checked)}
+                  checked={payeeSelectedState[payee._id.toString()]}
+                  onChange={handlePayeeSelect}
                 />
               </div>
             );

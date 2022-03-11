@@ -10,7 +10,7 @@ import LoaderDataHiddenInput from "~/components/util/LoaderDataHiddenInput";
 import CustomSplitItem from "~/components/CustomSplitItem";
 import XButton from "~/components/XButton";
 import { updateTransactionInProgress } from "~/utils/user.actions";
-import { isValidObjectId, Types } from "mongoose";
+import { Types } from "mongoose";
 
 import type { LoaderFunction, ActionFunction } from "remix";
 import type { LoaderDataShape } from "../index";
@@ -21,6 +21,8 @@ import type {
   TransactionInProgress,
 } from "~/models/TransactionSchema";
 import { LeanUser } from "~/models/UserSchema";
+
+type _id = string;
 
 export const loader: LoaderFunction = async ({ params }) => {
   invariant(params.poolId, "Could not read $poolId in path params");
@@ -39,6 +41,7 @@ export const action: ActionFunction = async ({ request }) => {
   invariant(pool, "pool is undefined/null");
   invariant(currentUser, "currentUser is undefined/null");
   try {
+    const transactionTotal = currentUser.transaction_in_progress.total;
     let splitItems: CustomSplitItemData[] = [];
     for (const item of formData.getAll("splitItemsData")) {
       splitItems.push(JSON.parse(item.toString()));
@@ -62,18 +65,25 @@ export const action: ActionFunction = async ({ request }) => {
 function processPayeeData(
   customSplitItems: CustomSplitItemData[]
 ): PayeeData[] {
-  let hash: { [_id: string]: { total_amount: number; items: SplitItem[] } } =
+  let hash: { [_id: _id]: { total_amount: number; items: SplitItem[] } } =
     {};
   for (const item of customSplitItems) {
-    // todo: refactor: no nested loops! Maybe worth re-configuring the input data so it's closer to the necessary shape
-    for (const payee of item.payees) {
-      const _id = payee._id.toString();
-      if (!isValidObjectId(_id))
-        throw "invalid Object ID passed to processPayeeData";
+    // todo: refactor: avoid nested loops! Maybe worth re-configuring the input data so it's closer to the necessary shape
+    invariant(
+      item.selectedPayees,
+      "custom split item has no selectedPayees array"
+    );
+    // this filter->map flow is for parsing the { _id: boolean } format into
+    // an array of just the _ids that are true. They originally come that way because
+    // it's easiest to handle state with checkboxes as object with true/false flags
+    // than handling an array/stack. Might need to go re-visit to see if handling checkbox state
+    // with a stack can be done though
+    const selectedPayees = parseCheckedPayeesIntoArray(item.selectedPayees);
+    for (const _id of selectedPayees) {
       if (!hash[_id]) {
         hash[_id] = { total_amount: 0, items: [] };
       }
-      hash[_id].total_amount += item.amount / item.payees.length;
+      hash[_id].total_amount += item.amount / selectedPayees.length;
       hash[_id].items.push({ name: item.name, amount: item.amount });
     }
   }
@@ -86,6 +96,16 @@ function processPayeeData(
     });
   }
   return res;
+}
+
+function parseCheckedPayeesIntoArray(checkedPayees: { [id: string]: boolean }): _id[] {
+  return Object.entries(checkedPayees)
+      .filter(([, val]) => {
+        return val == true;
+      })
+      .map(([_id]) => {
+        return _id;
+      });
 }
 
 export type ReducerAction =

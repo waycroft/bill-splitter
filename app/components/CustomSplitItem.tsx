@@ -6,6 +6,7 @@ export interface CustomSplitItemData extends SplitItem {
   id: string;
   dispatch?: any;
   payees: LeanUser[];
+  selectedPayees?: { [id: string]: boolean };
 }
 
 interface PayeeSelectStatus {

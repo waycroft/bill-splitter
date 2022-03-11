@@ -1,7 +1,7 @@
 import { Form, redirect, useLoaderData, useTransition } from "remix";
+import { useEffect, useReducer, useState } from "react";
 import invariant from "tiny-invariant";
 import { v4 as uuidv4 } from "uuid";
-import { useReducer } from "react";
 import { getPool } from "~/utils/pool.actions";
 import { Pool } from "~/models/PoolSchema";
 import { User } from "~/models/UserSchema";
@@ -137,9 +137,32 @@ export default function CustomSplitStep2() {
     },
   ];
   const [state, dispatch] = useReducer(reducer, initial);
+  const [remainingAmount, setRemainingAmount] = useState(
+    loaderData.currentUserData.transaction_in_progress.total
+  );
+  useEffect(() => {
+    let totalToDeduct = 0;
+    for (const splitItem of state) {
+      totalToDeduct += splitItem.amount;
+    }
+    setRemainingAmount(() => {
+      // keeps REMOVING from remainingAmount but not re-adding back the value if deleting...
+      invariant(
+        loaderData.currentUserData.transaction_in_progress.total != null,
+        "transaction_in_progress.total was undefined/null"
+      );
+      return (
+        loaderData.currentUserData.transaction_in_progress.total - totalToDeduct
+      );
+    });
+  }, [state]);
   return (
     <div>
       <h1>Custom Split</h1>
+      <h2>
+        {/* todo: validation: show error color when amount is negative */}
+        Remaining amount: <strong>${remainingAmount}</strong>
+      </h2>
       <div>
         {/* these inputs are not submitted with the form, but rather are passed to the hidden inputs below in the <Form> which actually submit the state */}
         {state.map((item) => {
@@ -171,8 +194,8 @@ export default function CustomSplitStep2() {
             dispatch({
               type: "ADD",
               payload: {
-                payees: loaderData.poolData.members
-              }
+                payees: loaderData.poolData.members,
+              },
             })
           }
           className="btn btn-accent rounded"

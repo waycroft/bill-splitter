@@ -69,7 +69,7 @@ export const action: ActionFunction = async ({ request }) => {
   return redirect(`/pools/${pool._id}`);
 };
 
-export default function SplitEvenlyStep2() {
+export default function NewTransactionFinal() {
   const loaderData = useLoaderData<LoaderDataShape>();
   const transition = useTransition();
   return (

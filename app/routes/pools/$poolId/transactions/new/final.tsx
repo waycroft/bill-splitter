@@ -30,9 +30,10 @@ export const action: ActionFunction = async ({ request }) => {
   const pool: Pool = JSON.parse(poolData.toString());
   invariant(currentUser, "currentUser is undefined/null");
   invariant(
+    // bookmark
     currentUser.transaction_in_progress &&
       currentUser.transaction_in_progress.total &&
-      currentUser.transaction_in_progress.split_evenly,
+      currentUser.transaction_in_progress.split_evenly != null,
     "currentUser's transactionInProgress is undefined or malformed"
   );
   delete currentUser.transaction_in_progress.step;

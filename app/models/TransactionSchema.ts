@@ -29,7 +29,6 @@ export interface Transaction {
   created_at: Date;
   total: number;
   owner: Types.ObjectId;
-  owner_amount: number;
   category: string;
   memo: string;
   payees: PayeeData[];
@@ -49,7 +48,6 @@ export const TransactionSchema = new Schema<Transaction>({
   },
   total: Number,
   owner: Schema.Types.ObjectId,
-  owner_amount: Number,
   category: String,
   memo: String,
   payees: [Schema.Types.Mixed],

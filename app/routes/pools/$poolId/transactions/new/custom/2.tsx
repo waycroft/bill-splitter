@@ -35,20 +35,25 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
-  const { poolData, currentUserData } = Object.fromEntries(formData);
+  // todo: refactor: probably best to actually declare each var per line
+  // instead of object destructuring here, so I can parse from FormDataEntryValue immediately
+  const { poolData, currentUserData, remainder } = Object.fromEntries(formData);
   const pool: Pool = JSON.parse(poolData.toString());
   const currentUser: User = JSON.parse(currentUserData.toString());
   invariant(pool, "pool is undefined/null");
   invariant(currentUser, "currentUser is undefined/null");
+  invariant(
+    currentUser.transaction_in_progress.total,
+    "transaction_in_progress.total is undefined/null"
+  );
   try {
-    const transactionTotal = currentUser.transaction_in_progress.total;
     let splitItems: CustomSplitItemData[] = [];
     for (const item of formData.getAll("splitItemsData")) {
       splitItems.push(JSON.parse(item.toString()));
     }
     const transactionInProgress: TransactionInProgress = {
       step: 3,
-      payees: processPayeeData(splitItems),
+      payees: processPayeeData(splitItems, Number(remainder.toString())),
     };
     await updateTransactionInProgress(currentUser._id, transactionInProgress);
     return redirect(`/pools/${pool._id}/transactions/new/final`);
@@ -59,30 +64,35 @@ export const action: ActionFunction = async ({ request }) => {
 
 /**
  * Takes the incoming custom split item formData and shapes it so it fits the Transaction schema.
- * @param customSplitItems The custom split items coming from the form data
- * @returns {PayeeData[]} An array of PayeeData for the eventual Transaction document
+ * @param customSplitItems The custom split items coming from the form data.
+ * @param {number} remainder The remaining amount, after deducting splits, which is shared evenly among all payees.
+ * @returns {PayeeData[]} An array of PayeeData for the eventual corresponding Transaction document property.
  */
 function processPayeeData(
-  customSplitItems: CustomSplitItemData[]
+  customSplitItems: CustomSplitItemData[],
+  remainder: number
 ): PayeeData[] {
+  // todo: refactor: probably looping too much. find a more efficient way of
+  // picking up the data I need on each loop
+  // Would at least help to have the "total split sum" passed into this from client
+  const allPayees = customSplitItems[0].payees;
   let hash: { [_id: _id]: { total_amount: number; items: SplitItem[] } } =
-    {};
+    allPayees.reduce((prev, curr) => {
+      return {
+        ...prev,
+        [curr._id.toString()]: {
+          total_amount: remainder / allPayees.length,
+          items: [],
+        },
+      };
+    }, {});
   for (const item of customSplitItems) {
-    // todo: refactor: avoid nested loops! Maybe worth re-configuring the input data so it's closer to the necessary shape
     invariant(
       item.selectedPayees,
-      "custom split item has no selectedPayees array"
+      "custom split item has no selectedPayees property"
     );
-    // this filter->map flow is for parsing the { _id: boolean } format into
-    // an array of just the _ids that are true. They originally come that way because
-    // it's easiest to handle state with checkboxes as object with true/false flags
-    // than handling an array/stack. Might need to go re-visit to see if handling checkbox state
-    // with a stack can be done though
     const selectedPayees = parseCheckedPayeesIntoArray(item.selectedPayees);
     for (const _id of selectedPayees) {
-      if (!hash[_id]) {
-        hash[_id] = { total_amount: 0, items: [] };
-      }
       hash[_id].total_amount += item.amount / selectedPayees.length;
       hash[_id].items.push({ name: item.name, amount: item.amount });
     }
@@ -90,7 +100,7 @@ function processPayeeData(
   let res: PayeeData[] = [];
   for (const [key, val] of Object.entries(hash)) {
     res.push({
-      _id: new Types.ObjectId(key),
+      user_id: new Types.ObjectId(key),
       total_amount: val.total_amount,
       items: val.items,
     });
@@ -98,14 +108,25 @@ function processPayeeData(
   return res;
 }
 
-function parseCheckedPayeesIntoArray(checkedPayees: { [id: string]: boolean }): _id[] {
+/**
+ * this function is for parsing the { _id: boolean } format into
+ * an array of just the _ids that are true. They originally come that way because
+ * it's easiest to handle state with checkboxes as object with true/false flags
+ * than handling an array/stack. Might need to go re-visit to see if handling checkbox state
+ * with a stack can be done though
+ * @param {{ [_id: _id]: boolean }} checkedPayees
+ * @returns a string of user_ids
+ */
+function parseCheckedPayeesIntoArray(checkedPayees: {
+  [_id: _id]: boolean;
+}): _id[] {
   return Object.entries(checkedPayees)
-      .filter(([, val]) => {
-        return val == true;
-      })
-      .map(([_id]) => {
-        return _id;
-      });
+    .filter(([, val]) => {
+      return val == true;
+    })
+    .map(([_id]) => {
+      return _id;
+    });
 }
 
 export type ReducerAction =
@@ -166,7 +187,6 @@ export default function CustomSplitStep2() {
       totalToDeduct += splitItem.amount;
     }
     setRemainingAmount(() => {
-      // keeps REMOVING from remainingAmount but not re-adding back the value if deleting...
       invariant(
         loaderData.currentUserData.transaction_in_progress.total != null,
         "transaction_in_progress.total was undefined/null"
@@ -227,6 +247,15 @@ export default function CustomSplitStep2() {
       <Form method="post">
         {/* todo: refactor: is it possible to pass a type param to loaderData here? */}
         <LoaderDataHiddenInput loaderData={loaderData} />
+        {/* todo: refactor: consider whether sending remainder from the client is actually *secure*... */}
+        {/* maybe run a simple assertion on the server to make sure they match */}
+        <input
+          hidden
+          readOnly
+          type="number"
+          name="remainder"
+          value={remainingAmount}
+        />
         {state.map((splitItem: CustomSplitItemData) => {
           return (
             <fieldset key={splitItem.id}>

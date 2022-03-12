@@ -34,7 +34,7 @@ export default function PoolRoute() {
           );
         })}
       </div>
-      <Link to={`transactions/new`}>
+      <Link to="transactions/new">
         <button className="btn btn-primary rounded-lg">Add transaction</button>
       </Link>
       <div>

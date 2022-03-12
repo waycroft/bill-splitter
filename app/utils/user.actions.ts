@@ -83,9 +83,14 @@ export async function updateTransactionInProgress(
 ) {
   let user = await UserModel.findById(_id);
   invariant(user, "Could not locate user (updateTransactionInProgress)");
-  let newTransactionInProgress = {
-    ...user.transaction_in_progress,
-    ...fields
+  let newTransactionInProgress: TransactionInProgress;
+  if (Object.getOwnPropertyNames(fields).length === 0) {
+    newTransactionInProgress = {};
+  } else {
+    newTransactionInProgress = {
+      ...user.transaction_in_progress,
+      ...fields,
+    };
   }
   user.transaction_in_progress = newTransactionInProgress;
   user.markModified("transaction_in_progress");

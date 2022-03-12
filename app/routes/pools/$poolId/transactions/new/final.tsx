@@ -30,11 +30,11 @@ export const action: ActionFunction = async ({ request }) => {
   const pool: Pool = JSON.parse(poolData.toString());
   invariant(currentUser, "currentUser is undefined/null");
   invariant(
-    // bookmark
     currentUser.transaction_in_progress &&
       currentUser.transaction_in_progress.total &&
+      currentUser.transaction_in_progress.payees &&
       currentUser.transaction_in_progress.split_evenly != null,
-    "currentUser's transactionInProgress is undefined or malformed"
+    "currentUser's transactionInProgress is undefined, malformed, or incomplete"
   );
   delete currentUser.transaction_in_progress.step;
   await insertTransaction({
@@ -44,26 +44,9 @@ export const action: ActionFunction = async ({ request }) => {
     transaction_date: new Date(),
     created_at: new Date(),
     owner: currentUser._id,
-    owner_amount:
-      currentUser.transaction_in_progress.total / pool.members.length,
     category: categoryInput.toString(),
     memo: memoInput.toString(),
-    payees: pool.members
-      .filter((user: LeanUser) => {
-        user._id !== currentUser._id;
-      })
-      .map((user: LeanUser) => {
-        invariant(
-          currentUser.transaction_in_progress.total,
-          "transaction_in_progress.total is undefined/null"
-        );
-        return {
-          _id: user._id,
-          total_amount:
-            currentUser.transaction_in_progress.total / pool.members.length,
-          items: [],
-        };
-      }),
+    payees: currentUser.transaction_in_progress.payees,
   });
   updateTransactionInProgress(currentUser._id, {});
   return redirect(`/pools/${pool._id}`);

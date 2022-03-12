@@ -5,12 +5,13 @@ import { Form, redirect, useLoaderData, useTransition } from "remix";
 import invariant from "tiny-invariant";
 import { getPool } from "~/utils/pool.actions";
 import { Pool } from "~/models/PoolSchema";
-import { User } from "~/models/UserSchema";
+import { LeanUser, User } from "~/models/UserSchema";
 import { getUser, updateTransactionInProgress } from "~/utils/user.actions";
+import LoaderDataHiddenInput from "~/components/util/LoaderDataHiddenInput";
+import { Types } from 'mongoose';
+
 import type { LoaderFunction, ActionFunction } from "remix";
 import type { TransactionInProgress } from "~/models/TransactionSchema";
-import LoaderDataHiddenInput from "~/components/util/LoaderDataHiddenInput";
-
 export interface LoaderDataShape {
   poolData: Pool;
   currentUserData: User;
@@ -39,6 +40,12 @@ export const action: ActionFunction = async ({ request }) => {
         split_evenly: true,
         total: Number(totalAmountInput),
         pool_id: pool._id,
+        payees: pool.members.map((user: LeanUser) => {
+          return {
+            user_id: new Types.ObjectId(user._id),
+            total_amount: Number(totalAmountInput) / pool.members.length,
+          };
+        }),
       };
       await updateTransactionInProgress(currentUser._id, transactionInProgress);
       return redirect(`${request.url}/final`);

@@ -12,7 +12,7 @@ export const SplitItemSchema = new mongoose.Schema<SplitItem>({
   amount: Number,
 })
 export interface PayeeData {
-  _id?: Types.ObjectId;
+  user_id?: Types.ObjectId;
   total_amount: number;
   items: SplitItem[];
 }

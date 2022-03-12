@@ -85,7 +85,7 @@ export default function NewTransactionIndexRoute() {
           type="checkbox"
           className="checkbox"
         />
-        <button type="submit" className={`btn btn-secondary rounded-md`}>
+        <button type="submit" className={`btn btn-secondary rounded-lg`}>
           {transition.state === "submitting" ? "Nexting..." : "Next 👉"}
         </button>
       </Form>

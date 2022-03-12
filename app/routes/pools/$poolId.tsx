@@ -15,10 +15,17 @@ export default function PoolRoute() {
   const data = useLoaderData<Pool>();
   return (
     <div className="container mx-auto">
+      <Link to="/pools">
+        <button className="btn btn-secondary rounded-lg">Back</button>
+      </Link>
       <div className="avatar-group">
         {data.members.map((member: LeanUser) => {
           return (
-            <div className="avatar placeholder" id={member._id.toString()} key={member._id.toString()}>
+            <div
+              className="avatar placeholder"
+              id={member._id.toString()}
+              key={member._id.toString()}
+            >
               <div className="w-12 bg-base-200">
                 {/* todo: accessibility: use actual ul element for no-js/accessibility */}
                 <span>{member.first_name[0] + member.last_name[0]}</span>
@@ -28,7 +35,7 @@ export default function PoolRoute() {
         })}
       </div>
       <Link to={`transactions/new`}>
-        <button className="btn">Add transaction</button>
+        <button className="btn btn-primary rounded-lg">Add transaction</button>
       </Link>
       <div>
         <Outlet />

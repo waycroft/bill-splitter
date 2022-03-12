@@ -77,7 +77,7 @@ export default function NewTransactionFinal() {
         />
         <button
           name="createTransaction"
-          className={`btn btn-primary rounded-md`}
+          className={`btn btn-primary rounded-lg`}
           type="submit"
         >
           {transition.state === "submitting"

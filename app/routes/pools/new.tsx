@@ -71,7 +71,7 @@ export default function NewPoolRoute() {
                 </div>
               );
             })}
-            <button className="btn btn-primary rounded" type="submit">
+            <button className="btn btn-primary rounded-lg" type="submit">
               {transition.submission ? "Creating..." : "Create Pool"}
             </button>
           </Form>
@@ -93,7 +93,7 @@ function UserSearch({ currentResults, addResult }: Props) {
   return (
     <div>
       <fetcher.Form method="post" action="/users/search">
-        <fieldset className="input-group rounded-md">
+        <fieldset className="input-group rounded-lg">
           <label tabIndex={0} className="m-1 text-lg font-bold">
             Add friends to pool
           </label>

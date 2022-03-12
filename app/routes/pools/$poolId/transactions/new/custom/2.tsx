@@ -238,7 +238,7 @@ export default function CustomSplitStep2() {
               },
             })
           }
-          className="btn btn-accent rounded"
+          className="btn btn-accent rounded-lg"
         >
           Add another
         </button>
@@ -269,7 +269,7 @@ export default function CustomSplitStep2() {
             </fieldset>
           );
         })}
-        <button type="submit" className={`btn btn-secondary rounded-md`}>
+        <button type="submit" className={`btn btn-secondary rounded-lg`}>
           {transition.state === "submitting" ? "Nexting..." : "Next 👉"}
         </button>
       </Form>

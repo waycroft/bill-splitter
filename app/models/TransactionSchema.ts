@@ -18,6 +18,7 @@ export interface PayeeData {
 }
 
 export const PayeeDataSchema = new mongoose.Schema<PayeeData>({
+  user_id: Schema.Types.ObjectId,
   total_amount: Number,
   items: [SplitItemSchema]
 })
@@ -50,7 +51,7 @@ export const TransactionSchema = new Schema<Transaction>({
   owner: Schema.Types.ObjectId,
   category: String,
   memo: String,
-  payees: [Schema.Types.Mixed],
+  payees: [PayeeDataSchema],
 });
 
 export interface TransactionBucket {

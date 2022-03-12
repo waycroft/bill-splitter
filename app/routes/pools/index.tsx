@@ -1,5 +1,4 @@
 import { Link, useLoaderData, json, Form, ActionFunction } from "remix";
-import { PoolModel } from "~/models/PoolSchema";
 import { LeanUser } from "~/models/UserSchema";
 import { getPools, deletePool } from "~/utils/pool.actions";
 import invariant from "tiny-invariant";
@@ -58,7 +57,7 @@ export default function PoolsIndexRoute() {
           <tbody>
             {poolData.map((pool: Pool) => {
               return (
-                <tr className="hover">
+                <tr className="hover" key={pool._id.toString()}>
                   <td className="w-1/3">
                     <Link to={pool._id.toString()}>{pool._id.toString()}</Link>
                   </td>

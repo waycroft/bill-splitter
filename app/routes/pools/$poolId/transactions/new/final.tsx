@@ -5,7 +5,7 @@ import invariant from "tiny-invariant";
 import { Form, redirect, useLoaderData, useTransition } from "remix";
 import { getPool } from "~/utils/pool.actions";
 import { Pool } from "~/models/PoolSchema";
-import { LeanUser, User } from "~/models/UserSchema";
+import { User } from "~/models/UserSchema";
 import { insertTransaction } from "~/utils/transactions.actions";
 import { getUser, updateTransactionInProgress } from "~/utils/user.actions";
 

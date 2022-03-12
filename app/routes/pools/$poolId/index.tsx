@@ -13,7 +13,7 @@ export default function PoolBody() {
   const poolData = useLoaderData<Pool>();
   return (
     <div>
-      <p>{JSON.stringify(poolData.transactions, null, '\t')}</p>
+      <code>{JSON.stringify(poolData.transactions, null, '\t')}</code>
     </div>
   );
 }

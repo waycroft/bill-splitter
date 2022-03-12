@@ -1,5 +1,5 @@
-import { Outlet, useLoaderData, json, Link } from "remix";
 import invariant from "tiny-invariant";
+import { Outlet, useLoaderData, Link } from "remix";
 import { getPool } from "~/utils/pool.actions";
 import { Pool } from "~/models/PoolSchema";
 import { LeanUser } from "~/models/UserSchema";

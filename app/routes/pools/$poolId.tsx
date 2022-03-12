@@ -16,7 +16,7 @@ export default function PoolRoute() {
   return (
     <div className="container mx-auto">
       <Link to="/pools">
-        <button className="btn btn-secondary rounded-lg">Back</button>
+        <button className="btn btn-secondary rounded-lg">👈 Back to pools</button>
       </Link>
       <div className="avatar-group">
         {data.members.map((member: LeanUser) => {

@@ -53,6 +53,7 @@ export const action: ActionFunction = async ({ request }) => {
     }
     const transactionInProgress: TransactionInProgress = {
       step: 3,
+      // todo: refactor: get this function definition out of this file! 
       payees: processPayeeData(splitItems, Number(remainder.toString())),
     };
     await updateTransactionInProgress(currentUser._id, transactionInProgress);

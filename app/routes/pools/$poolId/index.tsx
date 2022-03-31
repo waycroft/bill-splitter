@@ -14,6 +14,7 @@ export default function PoolBody() {
   return (
     <div>
       <code>{JSON.stringify(poolData.transactions, null, '\t')}</code>
+      {/* bookmark: footer component ("what I owe") goes here */}
     </div>
   );
 }

@@ -55,11 +55,11 @@ export async function deletePool(poolId: string) {
   return writeOp;
 }
 
-export type UpdateUsersBalancesMap = Map<string, number>;
+export type UsersBalancesMap = Map<string, number>;
 
 async function updateUsersBalances(
   pool_id: string,
-  updateValues: UpdateUsersBalancesMap
+  updateValues: UsersBalancesMap
 ) {
   const pool = await PoolModel.findOne({ id: pool_id });
   invariant(pool, "Pool not found in updateUsersBalances");
@@ -69,5 +69,15 @@ async function updateUsersBalances(
     invariant(amount, `No amount value was stored for ${_id.toString()}`);
     pool.members[i].balance += amount;
   }
-  await pool.save();
+  return await pool.save();
+}
+
+async function getUsersBalances(pool_id: string) {
+  const pool = await PoolModel.findOne({ id: pool_id }).lean();
+  invariant(pool, "Pool not found in getUsersBalances");
+  const usersBalancesMap: UsersBalancesMap = new Map();
+  for (const member of pool.members) {
+    usersBalancesMap.set(member._id.toString(), member.balance);
+  }
+  return usersBalancesMap;
 }

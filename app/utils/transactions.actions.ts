@@ -1,11 +1,16 @@
 import { TransactionBucketModel } from "~/models/TransactionSchema";
 import { PoolModel } from "~/models/PoolSchema";
 import invariant from "tiny-invariant";
+import { updateUsersBalances } from "./pool.actions";
 
 import type { Transaction } from "~/models/TransactionSchema";
 
 export async function insertTransaction(transaction: Transaction) {
   try {
+    await updateUsersBalances(
+      transaction.pool_id.toString(),
+      transaction.payees
+    );
     await pushToPoolsTransactions(transaction);
     return await addTransactionToBucket(transaction);
   } catch (error) {

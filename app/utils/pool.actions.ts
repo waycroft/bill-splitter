@@ -1,6 +1,7 @@
 import { PoolModel } from "~/models/PoolSchema";
 import invariant from "tiny-invariant";
 import { isValidObjectId } from "mongoose";
+import { PayeeData } from "~/models/TransactionSchema";
 
 import type { LeanUser } from "~/models/UserSchema";
 
@@ -55,29 +56,22 @@ export async function deletePool(poolId: string) {
   return writeOp;
 }
 
-export type UsersBalancesMap = Map<string, number>;
-
-async function updateUsersBalances(
+export async function updateUsersBalances(
   pool_id: string,
-  updateValues: UsersBalancesMap
+  payeeData: PayeeData[]
 ) {
   const pool = await PoolModel.findOne({ id: pool_id });
-  invariant(pool, "Pool not found in updateUsersBalances");
+  invariant(pool, "Pool not found (updateUsersBalances)");
+  const updateMap = new Map<string, number>();
+  for (const payee of payeeData) {
+    invariant(payee.user_id, "requires user_id on payeeData element");
+    updateMap.set(payee.user_id.toString(), payee.total_amount)
+  }
   for (let i = 0; i < pool.members.length; i++) {
-    const _id = pool.members[i];
-    const amount = updateValues.get(_id.toString());
+    const _id = pool.members[i]._id.toString();
+    const amount = updateMap.get(_id);
     invariant(amount, `No amount value was stored for ${_id.toString()}`);
     pool.members[i].balance += amount;
   }
   return await pool.save();
-}
-
-async function getUsersBalances(pool_id: string) {
-  const pool = await PoolModel.findOne({ id: pool_id }).lean();
-  invariant(pool, "Pool not found in getUsersBalances");
-  const usersBalancesMap: UsersBalancesMap = new Map();
-  for (const member of pool.members) {
-    usersBalancesMap.set(member._id.toString(), member.balance);
-  }
-  return usersBalancesMap;
 }

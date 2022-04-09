@@ -58,13 +58,18 @@ export async function deletePool(poolId: string) {
 
 export async function updateUsersBalances(
   pool_id: string,
-  payeeData: PayeeData[]
+  payeeData: PayeeData[],
+  owner: string
 ) {
   const pool = await PoolModel.findOne({ id: pool_id });
   invariant(pool, "Pool not found (updateUsersBalances)");
   const updateMap = new Map<string, number>();
   for (const payee of payeeData) {
     invariant(payee.user_id, "requires user_id on payeeData element");
+    if (payee.user_id.toString() === owner) {
+      // bookmark - not going negative. probably an issue with equality check above...
+      payee.total_amount * -1;
+    }
     updateMap.set(payee.user_id.toString(), payee.total_amount)
   }
   for (let i = 0; i < pool.members.length; i++) {

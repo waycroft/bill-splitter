@@ -20,7 +20,7 @@ export interface PayeeData {
 export const PayeeDataSchema = new mongoose.Schema<PayeeData>({
   user_id: Schema.Types.ObjectId,
   total_amount: Number,
-  items: [SplitItemSchema]
+  items: [SplitItemSchema],
 })
 export interface Transaction {
   _id?: Types.ObjectId;

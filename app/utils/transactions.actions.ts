@@ -9,7 +9,8 @@ export async function insertTransaction(transaction: Transaction) {
   try {
     await updateUsersBalances(
       transaction.pool_id.toString(),
-      transaction.payees
+      transaction.payees,
+      transaction.owner.toString()
     );
     await pushToPoolsTransactions(transaction);
     return await addTransactionToBucket(transaction);

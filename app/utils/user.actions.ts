@@ -51,7 +51,7 @@ export async function searchAllUsers(
   options = {
     lean: false,
   }
-): Promise<User[] | LeanUser[]> {
+): Promise<User[] | Omit<LeanUser, "balance">[]> {
   let results: User[] = await UserModel.aggregate([
     {
       $search: {
@@ -66,7 +66,7 @@ export async function searchAllUsers(
     },
   ]);
   if (options.lean) {
-    return results.map((user): LeanUser => {
+    return results.map((user: User): Omit<LeanUser, "balance"> => {
       return {
         _id: user._id,
         first_name: user.first_name,

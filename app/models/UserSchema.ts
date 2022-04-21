@@ -19,13 +19,12 @@ export interface User {
   transaction_in_progress: TransactionInProgress
 }
 
-export type LeanUser = Pick<User, "_id" | "first_name" | "last_name"> & { balance?: number };
+export type LeanUser = Pick<User, "_id" | "first_name" | "last_name"> & { balance: number };
 
 export const LeanUserSchema = new Schema<LeanUser>({
   first_name: String,
   last_name: String,
   balance: {
-    required: false,
     type: Number,
     default: 0
   }

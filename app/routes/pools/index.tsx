@@ -24,7 +24,6 @@ export let action: ActionFunction = async ({ request }) => {
         "Trying to delete pooId failed, poolId is null or undefined"
       );
       const deleteOp = await deletePool(poolId.toString());
-      console.log("Deleted pool.", deleteOp);
       return redirect("/pools");
     default:
       return redirect("/pools");

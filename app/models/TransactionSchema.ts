@@ -36,8 +36,6 @@ export interface Transaction {
   split_evenly: boolean;
 }
 
-export type TransactionInProgress = Partial<Transaction> & { step?: number };
-
 export const TransactionSchema = new Schema<Transaction>({
   created_at: {
     type: Date,
@@ -53,6 +51,16 @@ export const TransactionSchema = new Schema<Transaction>({
   memo: String,
   payees: [PayeeDataSchema],
 });
+
+export type TransactionInProgress = Partial<Transaction> & { step?: number };
+
+export const TransactionInProgressSchema = new Schema<TransactionInProgress>({
+  step: Number,
+  split_evenly: Boolean,
+  total: Number,
+  pool_id: Schema.Types.ObjectId,
+  payees: [PayeeDataSchema]
+})
 
 export interface TransactionBucket {
   _id: Types.ObjectId;

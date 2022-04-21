@@ -1,6 +1,8 @@
 import mongoose, { Schema, Types, model } from "mongoose";
-import type { Model } from "mongoose";
+import { TransactionInProgressSchema } from "./TransactionSchema";
+
 import type { TransactionInProgress } from "./TransactionSchema";
+import type { Model } from "mongoose";
 
 export interface User {
   _id: Types.ObjectId;
@@ -45,7 +47,7 @@ const UserSchema = new Schema<User>({
   transactions: [Schema.Types.ObjectId],
   total_owed: Number,
   total_owes: Number,
-  transaction_in_progress: Schema.Types.Mixed
+  transaction_in_progress: TransactionInProgressSchema
 });
 
 export const UserModel: Model<User> =

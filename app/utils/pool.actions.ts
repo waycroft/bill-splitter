@@ -59,7 +59,6 @@ export async function deletePool(poolId: string) {
 export async function updateUsersBalances(
   pool_id: string,
   payeeData: PayeeData[],
-  owner: string
 ) {
   const pool = await PoolModel.findOne({ id: pool_id });
   invariant(pool, "Pool not found (updateUsersBalances)");

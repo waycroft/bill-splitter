@@ -82,7 +82,15 @@ export async function updateTransactionInProgress(
   fields: TransactionInProgress | undefined
 ) {
   let user = await UserModel.findById(_id);
+  let userPojo = user?.toObject();
   invariant(user, "Could not locate user (updateTransactionInProgress)");
-  user.transaction_in_progress = fields;
+  if (fields === undefined) {
+    user.transaction_in_progress = undefined;
+  } else {
+    user.transaction_in_progress = {
+      ...userPojo?.transaction_in_progress,
+      ...fields
+    }
+  }
   return await user.save();
 }

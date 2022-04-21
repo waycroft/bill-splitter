@@ -66,7 +66,7 @@ export async function searchAllUsers(
     },
   ]);
   if (options.lean) {
-    return results.map((user) => {
+    return results.map((user): LeanUser => {
       return {
         _id: user._id,
         first_name: user.first_name,
@@ -93,6 +93,5 @@ export async function updateTransactionInProgress(
     };
   }
   user.transaction_in_progress = newTransactionInProgress;
-  user.markModified("transaction_in_progress");
   return await user.save();
 }

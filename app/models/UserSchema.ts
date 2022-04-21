@@ -16,7 +16,7 @@ export interface User {
   transactions: Types.ObjectId[];
   total_owed: number;
   total_owes: number;
-  transaction_in_progress: TransactionInProgress
+  transaction_in_progress?: TransactionInProgress
 }
 
 export type LeanUser = Pick<User, "_id" | "first_name" | "last_name"> & { balance: number };
@@ -47,7 +47,10 @@ const UserSchema = new Schema<User>({
   transactions: [Schema.Types.ObjectId],
   total_owed: Number,
   total_owes: Number,
-  transaction_in_progress: TransactionInProgressSchema
+  transaction_in_progress: {
+    required: false,
+    type: TransactionInProgressSchema
+  }
 });
 
 export const UserModel: Model<User> =

@@ -8,7 +8,7 @@ import { Pool } from "~/models/PoolSchema";
 import { LeanUser, User } from "~/models/UserSchema";
 import { getUser, updateTransactionInProgress } from "~/utils/user.actions";
 import LoaderDataHiddenInput from "~/components/util/LoaderDataHiddenInput";
-import { Types } from 'mongoose';
+import { Types } from "mongoose";
 
 import type { LoaderFunction, ActionFunction } from "remix";
 import type { TransactionInProgress } from "~/models/TransactionSchema";
@@ -39,12 +39,22 @@ export const action: ActionFunction = async ({ request }) => {
         step: 2,
         split_evenly: true,
         total: Number(totalAmountInput),
-        pool_id: pool._id,
+        pool_id: new Types.ObjectId(pool._id),
+        // todo: refactor
         payees: pool.members.map((user: LeanUser) => {
-          return {
-            user_id: new Types.ObjectId(user._id),
-            total_amount: Number(totalAmountInput) / pool.members.length,
-          };
+          const isTransactionOwner = user._id === currentUser._id;
+          const burden = Number(totalAmountInput) / pool.members.length;
+          if (!isTransactionOwner) {
+            return {
+              user_id: new Types.ObjectId(user._id),
+              total_amount: burden 
+            };
+          } else {
+            return {
+              user_id: new Types.ObjectId(user._id),
+              total_amount: (Number(totalAmountInput) - burden) * -1
+            };
+          }
         }),
       };
       await updateTransactionInProgress(currentUser._id, transactionInProgress);

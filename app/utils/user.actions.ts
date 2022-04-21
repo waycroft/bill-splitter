@@ -79,19 +79,10 @@ export async function searchAllUsers(
 
 export async function updateTransactionInProgress(
   _id: string | Types.ObjectId,
-  fields: TransactionInProgress
+  fields: TransactionInProgress | undefined
 ) {
   let user = await UserModel.findById(_id);
   invariant(user, "Could not locate user (updateTransactionInProgress)");
-  let newTransactionInProgress: TransactionInProgress;
-  if (Object.getOwnPropertyNames(fields).length === 0) {
-    newTransactionInProgress = {};
-  } else {
-    newTransactionInProgress = {
-      ...user.transaction_in_progress,
-      ...fields,
-    };
-  }
-  user.transaction_in_progress = newTransactionInProgress;
+  user.transaction_in_progress = fields;
   return await user.save();
 }

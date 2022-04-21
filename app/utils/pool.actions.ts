@@ -65,11 +65,9 @@ export async function updateUsersBalances(
   invariant(pool, "Pool not found (updateUsersBalances)");
   const updateMap = new Map<string, number>();
   for (const payee of payeeData) {
-    invariant(payee.user_id, "requires user_id on payeeData element");
-    if (payee.user_id.toString() === owner) {
-      payee.total_amount *= -1;
-    }
-    updateMap.set(payee.user_id.toString(), payee.total_amount)
+    const payee_id = payee.user_id?.toString();
+    invariant(payee_id, "requires user_id on payeeData element");
+    updateMap.set(payee_id, payee.total_amount)
   }
   for (let i = 0; i < pool.members.length; i++) {
     const _id = pool.members[i]._id.toString();

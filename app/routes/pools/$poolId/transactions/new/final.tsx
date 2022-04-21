@@ -48,7 +48,7 @@ export const action: ActionFunction = async ({ request }) => {
     memo: memoInput.toString(),
     payees: currentUser.transaction_in_progress.payees,
   });
-  updateTransactionInProgress(currentUser._id, {});
+  updateTransactionInProgress(currentUser._id, undefined);
   return redirect(`/pools/${pool._id}`);
 };
 

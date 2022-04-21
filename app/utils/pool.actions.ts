@@ -67,8 +67,7 @@ export async function updateUsersBalances(
   for (const payee of payeeData) {
     invariant(payee.user_id, "requires user_id on payeeData element");
     if (payee.user_id.toString() === owner) {
-      // bookmark - not going negative. probably an issue with equality check above...
-      payee.total_amount * -1;
+      payee.total_amount *= -1;
     }
     updateMap.set(payee.user_id.toString(), payee.total_amount)
   }

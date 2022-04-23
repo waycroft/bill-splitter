@@ -37,6 +37,7 @@
     "build:css": "tailwindcss -o ./app/tailwind.css",
     "dev": "cross-env NODE_ENV=development concurrently \"npm run dev:css\" \"remix dev\"",
     "dev:css": "tailwindcss -o ./app/tailwind.css --watch",
-    "start": "cross-env NODE_ENV=production remix-serve build"
+    "start": "cross-env NODE_ENV=production remix-serve build",
+    "debug": "remix dev"
   }
 }

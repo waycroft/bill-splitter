@@ -1,11 +1,12 @@
-import { useFetcher, Form, useTransition, redirect } from "remix";
+import type { ActionFunction } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
+import { Form, useFetcher, useTransition } from "@remix-run/react";
 import { useState } from "react";
 import { upsertPool } from "~/utils/pool.actions";
 import Chip from "~/components/Chip";
 import invariant from "tiny-invariant";
 import { LeanUser } from "~/models/UserSchema";
 
-import type { ActionFunction } from "remix";
 import SearchButton from "~/components/SearchButton";
 
 export const action: ActionFunction = async ({ request }) => {

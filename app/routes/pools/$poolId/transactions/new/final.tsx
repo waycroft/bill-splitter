@@ -2,14 +2,15 @@
 // and use a map/enum to switch them on/off. Maybe a prop for each that accepts
 // a map defined at the root of this route component that decides its hidden/shown status
 import invariant from "tiny-invariant";
-import { Form, redirect, useLoaderData, useTransition } from "remix";
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
+import { Form, useLoaderData, useTransition } from "@remix-run/react";
 import { getPool } from "~/utils/pool.actions";
 import { Pool } from "~/models/PoolSchema";
 import { User } from "~/models/UserSchema";
 import { insertTransaction } from "~/utils/transactions.actions";
 import { getUser, updateTransactionInProgress } from "~/utils/user.actions";
 
-import type { LoaderFunction, ActionFunction } from "remix";
 import type { LoaderDataShape } from "./index";
 import LoaderDataHiddenInput from "~/components/util/LoaderDataHiddenInput";
 

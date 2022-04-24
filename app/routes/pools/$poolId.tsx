@@ -1,10 +1,9 @@
 import invariant from "tiny-invariant";
-import { Outlet, useLoaderData, Link } from "remix";
+import type { LoaderFunction } from "@remix-run/node";
+import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import { getPool } from "~/utils/pool.actions";
 import { Pool } from "~/models/PoolSchema";
 import { LeanUser } from "~/models/UserSchema";
-
-import type { LoaderFunction } from "remix";
 
 export let loader: LoaderFunction = async ({ params }) => {
   invariant(params.poolId, "No pool ID");

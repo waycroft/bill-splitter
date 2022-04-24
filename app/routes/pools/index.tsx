@@ -1,12 +1,11 @@
-import { Link, useLoaderData, json, Form, ActionFunction } from "remix";
+import type { LoaderFunction } from "@remix-run/node";
+import { ActionFunction, json, redirect } from "@remix-run/node";
+import { Form, Link, useLoaderData } from "@remix-run/react";
 import { LeanUser } from "~/models/UserSchema";
 import { getPools, deletePool } from "~/utils/pool.actions";
 import invariant from "tiny-invariant";
 
 import type { Pool } from "~/models/PoolSchema";
-import { redirect } from "remix";
-
-import type { LoaderFunction } from "remix";
 import XButton from "~/components/XButton";
 
 export let loader: LoaderFunction = async () => {

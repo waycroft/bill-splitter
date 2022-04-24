@@ -1,4 +1,4 @@
-import type { ActionFunction } from 'remix';
+import type { ActionFunction } from "@remix-run/node";
 import { searchAllUsers } from '~/utils/user.actions';
 
 export let action: ActionFunction =  async ({ request }) => {

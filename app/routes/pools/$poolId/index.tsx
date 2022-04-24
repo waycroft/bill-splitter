@@ -1,4 +1,5 @@
-import { LoaderFunction, useLoaderData } from "remix";
+import { LoaderFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { getPool } from "~/utils/pool.actions";
 

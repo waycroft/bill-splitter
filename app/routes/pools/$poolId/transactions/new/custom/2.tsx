@@ -1,4 +1,6 @@
-import { Form, redirect, useLoaderData, useTransition } from "remix";
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
+import { Form, useLoaderData, useTransition } from "@remix-run/react";
 import { useEffect, useReducer, useState } from "react";
 import invariant from "tiny-invariant";
 import { v4 as uuidv4 } from "uuid";
@@ -12,7 +14,6 @@ import XButton from "~/components/XButton";
 import { updateTransactionInProgress } from "~/utils/user.actions";
 import { Types } from "mongoose";
 
-import type { LoaderFunction, ActionFunction } from "remix";
 import type { LoaderDataShape } from "../index";
 import type { CustomSplitItemData } from "~/components/CustomSplitItem";
 import type {
